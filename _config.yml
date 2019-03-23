@@ -107,7 +107,7 @@ analytics:
 # Site Author
 author:
   name             : "Mark Wang"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/images/Mark_profile.jpg"
   bio              : "Master of International Economics from UC San Diego, co-author of Demographics with Chinese Characters."
   location         : "San Diego, CA"
   email            :
