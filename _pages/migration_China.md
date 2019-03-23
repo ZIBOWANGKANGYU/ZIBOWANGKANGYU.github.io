@@ -1,8 +1,8 @@
 ---
-#layout: archive
-permalink: /migration-china/
+layout: archive
+permalink: /migration-China/
 title: "Migration in China: an gravity model with 2015 mini census data"
-#author_profile: true
+author_profile: true
 header:
    image: "/images/migration.jpg"
 ---
