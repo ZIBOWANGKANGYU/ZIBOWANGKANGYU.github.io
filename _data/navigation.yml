@@ -2,8 +2,6 @@
 main:
   - title: "About"
     url: /about/
-  - title: "Migration in China"
-    url: /migration_China/
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   # - title: "Sample Posts"
   #   url: /year-archive/
