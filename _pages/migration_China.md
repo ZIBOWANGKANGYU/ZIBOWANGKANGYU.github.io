@@ -11,4 +11,19 @@ Utilizing geographical information system (GIS) tools, this article applies gene
 
 # Key visualizations
 proportion of migrants across provinces
-<img src="{{ site.url }}{{ site.baseurl }}/images/Figure_1.jpg" alt="proportion of migrants across provinces">
+<img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_1.jpg" alt="proportion of migrants across provinces">
+
+size of migration flow across provinces
+<img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_2.jpg" alt="size of migration flow across provinces">
+
+average cost distance to largest cities in all other provinces
+<img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_3.jpg" alt="average cost distance to largest cities in all other provinces">
+
+average cultural distance to all other provinces
+<img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_4.jpg" alt="average cultural distance to all other provinces">
+
+average climate distance to all other provinces
+<img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_5.jpg" alt="average climate distance to all other provinces">
+
+grain cultivation
+<img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_6.jpg" alt="grain cultivation">
