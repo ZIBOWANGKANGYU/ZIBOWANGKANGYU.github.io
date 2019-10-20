@@ -27,3 +27,6 @@ average climate distance to all other provinces
 
 grain cultivation
 <img src="{{ site.url }}{{ site.baseurl }}/images/inter-provincial/Figure_6.jpg" alt="grain cultivation">
+
+# For more information
+For more information, please see [Project page](https://zibowangkangyu.github.io/sales_forecast)
