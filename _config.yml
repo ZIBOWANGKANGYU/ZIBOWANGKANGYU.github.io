@@ -108,13 +108,13 @@ analytics:
 author:
   name             : "Mark Wang"
   avatar           : "/images/Mark_profile.jpg"
-  bio              : "Master of International Economics from UC San Diego, co-author of Demographics with Chinese Characters."
+  bio              : "Master of International Economics from UC San Diego. Projects include natural langugae processing, dynamic processes and causal inference"
   location         : "San Diego, CA"
   email            :
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: kaw129@ucsd.edu
+      url: kangyumarkwang@gmail.com
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
