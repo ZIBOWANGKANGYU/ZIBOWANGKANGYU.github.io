@@ -1,0 +1,1573 @@
+---
+title: "Model training"
+author: "Mark Wang & Paola Aleman"
+date: "9/30/2019"
+output: word_document
+editor_options:
+  chunk_Output_type: console
+Output: word_document
+---
+
+# Instructions
+
+For the following code to run smoothly it is necessary to have the folders that the line of code calls for.  
+The main folder is called Forecast, which holds all R-markdowns. The subfolders for the Forecast folder are: Code, Data, Output. The subfolder Code holds scripts.  
+The subfolder Data holds two more subfolders: Countries, Raw Data. The Countries subfolder [this is an optional subfolder] includes folders for each country to which we individually want to save data on. Raw Data folder only has the raw data on it.  
+The subfolder Output includes a subfolder called Countries and this folder has folders for each country. Each country then has 2 additional folders: Plots, Tables.  
+The Plots folder saves all graphs created in the script.   
+The Tables folder saves all excel files with the performance indices.   
+Note the models are label by c 1 k. which stands for c -> colombia, 1 -> club 6101 and k -> kitchen trash bags.  
+It is necessary to change c 1 k whenever you're analyzing a different set of item and club. This way graphs and models are saved into folders with their specific name.  
+For easier substitution ctrl+f. In the first box type the name you want to substitute, such as c 1 k. and on the second box include the prefix you want to substitute with, suck as c 2 k. Then click the last All option.  
+
+# Setup
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath("C:/Users/mwang/Desktop/Forecast"))
+setwd("C:/Users/mwang/Desktop/Forecast")
+getwd()  
+
+# The following parameters should be set to reflect the purchasing strategy of Pricemart that are different across different items and clubs. The parameters are in week terms.
+
+len_dec<-1  #The frequency in which buyers make purchase decisions 
+
+len_inv<-17 #The time span from purchase to selling of an item 
+
+#Item, club and country we are analyzing 
+item <- "Kitchen Trash Bag"
+club <- 6101
+country <- "Colombia"
+
+```
+
+# Installing packages
+
+```{r Installing packages, include=FALSE, results = 'hide'}  
+# Install the packages just once. Afterwards you only need to load the libraries
+source("Code/Install Packages.R")
+
+``` 
+
+# Define functions: 
+Three functions are defined in this section. firstly, performance_index_dtds function calculates the performance of prediction models on de-trended and de-seasonalized quantity data. Secondly, performance_index_raw function calculates the performance of prediction models on raw data. Thirdly, feature_engineering function performs feature engineering to prepare for machine learning data. 
+
+```{r performance index function}
+
+# This scripts stores performance_index function
+
+performance_index_dtds<-function(df_Actual, pred_name, pred_value){
+   assign(pred_name, exp(pred_value+(retrend_log-trend_log[1])+reseasonal_log))
+   df_Actual[,colnames(df_Actual)==pred_name]<-NULL
+   df_Actual<-cbind(df_Actual, get(pred_name)%>%as.numeric())
+   colnames(df_Actual)[colnames(df_Actual)=="get(pred_name) %>% as.numeric()"]<-pred_name
+   assign(paste0("MEAN_", pred_name, "_total"), 
+         mean(get(pred_name))/df_Actual%>%select("Actual")%>%data.matrix()%>%mean()-1,
+         envir = .GlobalEnv
+         )
+   assign(paste0("MEAN_", pred_name, "_target"),
+         mean((get(pred_name))[(len_inv+1):(len_inv+len_dec)])/mean((df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)])-1,
+         envir=.GlobalEnv
+         )
+  
+   assign(paste0("RMSE_", pred_name, "_total" ),
+         RMSE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("RMSE_", pred_name, "_target" ),
+         RMSE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+    
+   assign(paste0("RMSE_", pred_name, "_total" ),
+         RMSE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("RMSE_", pred_name, "_target" ),
+         RMSE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+   
+   assign(paste0("MAE_", pred_name, "_total" ),
+         MAE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MAE_", pred_name, "_target" ),
+         MAE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  
+   assign(paste0("MPE_", pred_name, "_total" ),
+         MPE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MPE_", pred_name, "_target" ),
+         MPE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+   
+   assign(paste0("MAPE_", pred_name, "_total" ),
+         MAPE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MAPE_", pred_name, "_target" ),
+         MAPE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  
+   assign(paste0("MASE_", pred_name, "_total" ),
+         mase(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MASE_", pred_name, "_target" ),
+         mase((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  return(df_Actual)
+}
+
+performance_index_raw<-function(df_Actual, pred_name, pred_value){
+   assign(pred_name, exp(pred_value))
+   df_Actual[,colnames(df_Actual)==pred_name]<-NULL
+   df_Actual<-cbind(df_Actual, get(pred_name)%>%as.numeric())
+   colnames(df_Actual)[colnames(df_Actual)=="get(pred_name) %>% as.numeric()"]<-pred_name
+   assign(paste0("MEAN_", pred_name, "_total"), 
+         mean(get(pred_name))/df_Actual%>%select("Actual")%>%data.matrix()%>%mean()-1,
+         envir = .GlobalEnv
+         )
+   assign(paste0("MEAN_", pred_name, "_target"),
+         mean((get(pred_name))[(len_inv+1):(len_inv+len_dec)])/mean((df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)])-1,
+         envir=.GlobalEnv
+         )
+  
+   assign(paste0("RMSE_", pred_name, "_total" ),
+         RMSE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("RMSE_", pred_name, "_target" ),
+         RMSE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  
+      assign(paste0("MAE_", pred_name, "_total" ),
+         MAE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MAE_", pred_name, "_target" ),
+         MAE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+   
+   assign(paste0("MPE_", pred_name, "_total" ),
+         MPE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MPE_", pred_name, "_target" ),
+         MPE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  
+   assign(paste0("MAPE_", pred_name, "_total" ),
+         MAPE(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MAPE_", pred_name, "_target" ),
+         MAPE((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  
+   assign(paste0("MASE_", pred_name, "_total" ),
+         mase(get(pred_name),df_Actual%>%select("Actual")%>%data.matrix()),
+         envir = .GlobalEnv)
+   assign(paste0("MASE_", pred_name, "_target" ),
+         mase((get(pred_name)[(len_inv+1):(len_inv+len_dec)]),(df_Actual%>%select("Actual")%>%data.matrix())[(len_inv+1):(len_inv+len_dec)]),
+         envir = .GlobalEnv)
+  return(df_Actual)
+}
+feature_engineering<-function(t_v, feature_list){
+  function_names<-c("avg" , "diff")
+  function_list<-list(function(x) roll_meanr(x, n= 4), function(x) c(diff(x), NA))
+  weeks<-c(1, 4, 5, 8, 9, 12, 13, 17, 18, 22, 26, 52)
+  for (feature in feature_list){ 
+    for (lag_number in (weeks[weeks>=len_dec+len_inv])){
+      assign(paste0("lag", "_", lag_number, "_", feature), lag((t_v%>%select(feature))[[1]], lag_number))
+      t_v<-cbind(t_v, get(paste0("lag", "_", lag_number, "_", feature))%>%as.numeric())
+      colnames(t_v)[colnames(t_v)=="get(paste0(\"lag\", \"_\", lag_number, \"_\", feature)) %>% as.numeric()"]<-paste0("lag", "_", lag_number, "_", feature)
+      for (i in (1:length(function_names))){
+        assign(paste0(function_names[i], "_", lag_number, "_", feature), lag(function_list[[i]]((t_v%>%select(feature))[[1]]), lag_number))
+        t_v<-cbind(t_v, get(paste0(function_names[i], "_", lag_number, "_", feature))%>%as.numeric())
+        colnames(t_v)[colnames(t_v)=="get(paste0(function_names[i], \"_\", lag_number, \"_\", feature)) %>% "]<-paste0(function_names[i], "_", lag_number, "_", feature)
+      }
+    }
+  }
+  return(t_v)
+}
+```
+
+# Importing Training Dataset
+
+```{r importing}   
+load("Data/Raw Data/trainingSet.RData")
+
+#Changing the format of variables
+##Changing "TransactionDate" from integer to date 
+train$TransactionDate<- as.Date(train$TransactionDate%>%as.character(), "%Y%m%d")
+train$TransactionDate<- ymd(train$TransactionDate)
+
+##Changing "Club Number" from integer to Factor 
+train$ClubNumber<- as.factor(train$ClubNumber)
+
+##Changing "item" from integer to Factor 
+train$item<- as.factor(train$item)
+
+#Subsetting to country
+country_set<-subset(train, Country == country) 
+```
+
+## Dealing with Variables  
+
+```{r dealing with variables}
+
+##Changing Month into Factor
+country_set$month<-as.factor(strftime(country_set$TransactionDate, "%B"))
+#ClubNumber into Factor
+country_set$ClubNumber<- as.factor(country_set$ClubNumber)
+##Day of week
+country_set$Day_of_week <- as.factor(strftime(country_set$TransactionDate, "%A"))
+#Create Dummy Variables for month and weekday
+country_set<- cbind(country_set, fastDummies::dummy_cols(country_set$month))
+country_set<- cbind(country_set, fastDummies::dummy_cols(country_set$Day_of_week))
+
+#Take out unnecessary variables
+country_set$.data<- NULL
+country_set$.data<- NULL
+country_set$Year<- NULL
+country_set$.data_February<- NULL
+country_set$.data_Monday <- NULL
+
+#Rename Month Dummy Variables 
+colnames(country_set)[colnames(country_set)==".data_January"] <- "Jan"
+colnames(country_set)[colnames(country_set)==".data_March"] <- "Mar"
+colnames(country_set)[colnames(country_set)==".data_April"] <- "Apr"
+colnames(country_set)[colnames(country_set)==".data_May"] <- "May"
+colnames(country_set)[colnames(country_set)==".data_June"] <- "June"
+colnames(country_set)[colnames(country_set)==".data_July"] <- "July"
+colnames(country_set)[colnames(country_set)==".data_August"] <- "Aug"
+colnames(country_set)[colnames(country_set)==".data_September"] <- "Sep"
+colnames(country_set)[colnames(country_set)==".data_October"] <- "Oct"
+colnames(country_set)[colnames(country_set)==".data_November"] <- "Nov"
+colnames(country_set)[colnames(country_set)==".data_December"] <- "Dec"
+
+#Rename Weekday dummy variables
+colnames(country_set)[colnames(country_set)==".data_Tuesday"] <- "Tu"
+colnames(country_set)[colnames(country_set)==".data_Thursday"] <- "Th"
+colnames(country_set)[colnames(country_set)==".data_Wednesday"] <- "Wed"
+colnames(country_set)[colnames(country_set)==".data_Friday"] <- "Fri"
+colnames(country_set)[colnames(country_set)==".data_Saturday"] <- "Sat"
+colnames(country_set)[colnames(country_set)==".data_Sunday"] <- "Sun"
+
+#Subsetting
+c1k<-country_set[country_set$Description==item & country_set$ClubNumber==club,]
+
+c1k<-c1k[order(c1k$TransactionDate),]
+
+c1k$TransactionDate<- as.Date(c1k$TransactionDate)
+```
+
+# Summary statistics
+
+```{r summary statistics}
+#Summary statistics
+
+# Time span
+## Beginning and Ending of dataset
+summary(c1k$TransactionDate)
+## Gaps
+c(min(c1k$TransactionDate):max(c1k$TransactionDate))[c(min(c1k$TransactionDate):max(c1k$TransactionDate))%in%c1k$TransactionDate==FALSE]%>%as.Date(origin="1970-1-1")
+
+c1k_quant_dist<-c(c1k$quantity, rep(0, sum(c(min(c1k$TransactionDate):max(c1k$TransactionDate))%in%c1k$TransactionDate==FALSE)))
+hist(c1k_quant_dist, breaks = 20)
+
+c1k$SalePrice_local<- c1k$sales_local/c1k$quantity
+c1k$SalePrice_usd<- c1k$sales_usd/c1k$quantity
+# cycles
+ggplot(data=c1k, aes(x=TransactionDate, y=SalePrice_local))+geom_line()
+ggplot(data=c1k, aes(x=TransactionDate, y=SalePrice_usd))+geom_line()
+ggplot(data=c1k, aes(x=TransactionDate, y=quantity))+geom_line()
+
+```
+
+## Dropping unnecessary variables
+
+```{r drop unnecessary variables}
+#Drop unnecessary variables
+c1k$ClubNumber<-NULL
+c1k$Country<-NULL
+c1k$item<-NULL
+c1k$Description<-NULL
+c1k$Day_of_month<-NULL
+c1k$month<- NULL
+c1k$weekday<- NULL
+c1k$Day_of_week<- NULL
+c1k$Year<- NULL
+```
+
+# Loading the Categorical Sale
+
+```{r category sales}
+
+category<- read_excel("Data/Book1.xlsx")
+#renaming variables
+colnames(category)[colnames(category)=="quantity"] <- "Category_quantity"
+colnames(category)[colnames(category)=="salesusd"] <- "Category_Sales_usd"
+colnames(category)[colnames(category)=="sales"] <- "Category_Sales_local"
+#changing date formats
+category$TransactionDate<-ymd(category$TransactionDate)
+
+#subset to only club number 6101
+category_club<- subset(category, ClubNumber == club)
+category_club$ClubNumber<- NULL
+
+#Merge c1k with category 
+c1k<- merge(c1k, category_club)
+```
+
+# Aggregate data to the weekly level
+
+```{r weekly level}
+
+c1k$TransactionYear<-year(c1k$TransactionDate) #Extract Transaction Year
+c1k$week_number<-c1k$TransactionDate%>%date2ISOweek()%>%substr(7,8)
+c1k$week_number_year<-c1k$TransactionDate%>%date2ISOweek()%>%substr(1,4)
+
+#aggregation
+c1k_week<-c1k%>%group_by(week_number_year,week_number)%>%summarise(
+   transaction_avrg=mean(number_transactions, na.rm = TRUE),                                           members_avrg=mean(number_members, na.rm = TRUE),                                                    sales_local_avrg=mean(sales_local, na.rm = TRUE),
+   sales_usd_avrg=mean(sales_usd, na.rm = TRUE),
+   exchange_rate_avrg=mean(exchange_rate, na.rm = TRUE),
+   category_sales_usd_avrg=mean(Category_Sales_usd, na.rm = TRUE),
+   category_sales_local_avrg=mean(Category_Sales_local, na.rm = TRUE),
+   category_quantity_avrg=mean(Category_quantity, na.rm = TRUE),
+   quantity_avrg=mean(quantity, na.rm = TRUE),
+   salePrice_local_avrg = mean(SalePrice_local, na.rm = TRUE),
+   salePrice_usd_avrg = mean(SalePrice_usd, na.rm = TRUE))
+
+c1k_week$TransactionTime<-paste0(c1k_week$week_number_year,"-W", c1k_week$week_number, "-3")%>%ISOweek2date()
+c1k_week$week_number<- as.numeric(c1k_week$week_number)
+c1k_week$week_number_year<-as.numeric(c1k_week$week_number_year)
+
+```
+
+# Identify Seasonality and create time series
+The periodogram function does not detect high frequency seasons accurately. To solve this problem, one of the built in functions need to be modified.  
+run the following line in r:  
+trace(spec.pgram, edit=TRUE)  
+then change line 9 to:  
+N <- N0 <- nrow(x) * 128  
+then click "save"  
+the function is hence temporarily changed. Judgement is still needed to determine what type of seasonality it is capturing. In this case is year, half-year and three-month.  
+The seasons detected are only rough estimates and we need to use knowledge about annual time series to determine the real seasons (semi-annual, annual etc.).Therefore, the identification of seasons here is not completely automated. Personal judgement is still needed.  
+Firstly, 52.14, the number of weeks per year, is always included.  
+Secondly, only periods shorter than 52.14 should be included, and their length should be adjusted to its closest whole-month length. For example, if 13.02 is reported is a strong period by Fourier transformation, 12.53 (three months) should be the season used in analyses.   
+Thirdly, none period should be multiple of the other (otherwise Fourier regressor does not work).   Therefore, half-year period is changed from 26.07 to 25.07 weeks. We believe better ways to deal with this problem exist.  
+
+```{r seasons} 
+trace(spec.pgram, edit=TRUE)
+#detecting seasonality
+p <- periodogram(c1k_week$quantity_avrg[1:(nrow(c1k_week)-len_inv-len_dec)])
+dd <- data.frame(freq=p$freq, spec=p$spec)
+order <- dd[order(-dd$spec),]
+top10 <- head(order, 10)
+ 
+# display the 3 highest "power" frequencies
+top10
+# convert frequency to time periods
+time = 1/top10$freq
+
+order<-order[(1/order)<60,]
+top10 <- head(order, 10)
+time = 1/top10$freq
+
+season1<-25.07 
+season2<-52.14 
+season3<-13.14 
+
+```
+
+# Creating Time Series 
+
+```{r TS}
+#creating time series: log
+t_log<-ts(log(c1k_week$quantity_avrg)[1:(nrow(c1k_week)-len_inv-len_dec)], frequency = 52.14, start = c(c1k_week$week_number_year[1], c1k_week$week_number[1]))  
+
+plot(t_log)+title("Log sales quantity, club 6106")
+ggplot(c1k_week)+geom_line(aes(x=TransactionTime, y=quantity_avrg))+xlab("Transaction time")+ylab("weekly average")+ggtitle(paste("Sales quantity", club))
+```
+
+## Deseasonalizing Methods
+
+```{r deseasonalizing}
+
+decompose_log <- stl(t_log, s.window = 13, t.window = 13)
+plot(decompose_log)
+
+adjust_log<- t_log - decompose_log$time.series[,1] 
+```
+
+## Detrend after taking out the outliers 
+
+```{r detrend}
+
+outlier_free_log<- tsclean(adjust_log)
+trend_log<- decompose_log$time.series[, 2]
+detrend_ts_log <- outlier_free_log-(trend_log - trend_log[1])
+
+plot(adjust_log)
+plot(outlier_free_log)
+autoplot(adjust_log)+autolayer(outlier_free_log)
+plot(detrend_ts_log)
+
+```
+
+# Training and Validation Set: uni-variate methods
+
+```{r training and validation Set}  
+
+training_log<-ts(detrend_ts_log[1:(nrow(c1k_week)-len_inv-len_dec)], frequency = 52.14, start = c(c1k_week$week_number_year[1], c1k_week$week_number[1])) 
+
+# future trend and seasonality, which will be added back:
+
+trend_fit_log <- auto.arima(trend_log)
+trend_for_log <- forecast(trend_fit_log, len_inv+len_dec)$mean
+retrend_log<-trend_for_log
+reseasonal_log<-forecast(decompose_log$time.series[,1], len_inv+len_dec)$mean
+
+##validation set
+
+validation_log<-ts(log(c1k_week$quantity_avrg)[(nrow(c1k_week)-len_inv-len_dec+1):nrow(c1k_week)], frequency = 52.14, end = c(c1k_week$week_number_year[length(c1k_week$week_number_year)], c1k_week$week_number[length(c1k_week$week_number_year)]))
+
+validation<-ts(c1k_week$quantity_avrg[(nrow(c1k_week)-len_inv-len_dec+1):nrow(c1k_week)], frequency = 52.14, end = c(c1k_week$week_number_year[length(c1k_week$week_number_year)], c1k_week$week_number[length(c1k_week$week_number_year)]))
+
+```
+
+# Visualization of Trend, season and random
+
+```{r visualization}
+# data visualization
+theme_ts <- theme(panel.border = element_rect(fill = NA, 
+                                              colour = "grey10"),
+                  panel.background = element_blank(),
+                  panel.grid.minor = element_line(colour = "grey85"),
+                  panel.grid.major = element_line(colour = "grey85"),
+                  panel.grid.major.x = element_line(colour = "grey85"),
+                  axis.text = element_text(size = 13, face = "bold"),
+                  axis.title = element_text(size = 15, face = "bold"),
+                  plot.title = element_text(size = 16, face = "bold"),
+                  strip.text = element_text(size = 16, face = "bold"),
+                  strip.background = element_rect(colour = "black"),
+                  legend.text = element_text(size = 15),
+                  legend.title = element_text(size = 16, face = "bold"),
+                  legend.background = element_rect(fill = "white"),
+                  legend.key = element_rect(fill = "white"))
+
+# Decomposition of log series
+
+decomp_stl_log<- data.table(Quant = c(t_log, decompose_log$time.series[, 1], decompose_log$time.series[, 2]-decompose_log$time.series[, 2][1], detrend_ts_log),
+                         Date = rep(c1k_week$TransactionTime[1:(nrow(c1k_week)-len_inv-len_dec)], ncol(decompose_log$time.series)+1),
+                         Type = factor(rep(c("log quantity", colnames(decompose_log$time.series)),
+                                       each = nrow(decompose_log$time.series)),
+                                       levels = c("log quantity", colnames(decompose_log$time.series))))
+
+ggplot(decomp_stl_log, aes(x = Date, y = Quant)) +
+  geom_line() + 
+  facet_grid(Type ~ ., scales = "free_y", switch = "y") +
+  labs(x = "Time", y = NULL,
+       title = "Time Series Decomposition by STL (log quantity)") +
+  theme_ts
+ggsave("Output/Countries/Colombia/Plots/decomp_training_log_c1k.jpg", width = 6, height = 10)
+
+decomp_stl_training_log<- decomp_stl_log
+decomp_stl_training_log$set<-"training"
+
+decomp_stl_forecast_log<-data.table(Quant=c(rep(NA, len_dec+len_inv), reseasonal_log, retrend_log-trend_log[1], rep(NA, len_dec+len_inv)), 
+                                Date = rep(c1k_week$TransactionTime[(nrow(c1k_week)-len_dec-len_inv+1): nrow(c1k_week)], ncol(decompose_log$time.series)+1), 
+                                Type = factor(rep(c("log quantity", colnames(decompose_log$time.series)),
+                                       each = len_dec+len_inv),
+                                       levels = c("log quantity", colnames(decompose_log$time.series))))
+decomp_stl_forecast_log$set<-"forecast"
+decomp_stl_combined_log<-rbind(decomp_stl_training_log, decomp_stl_forecast_log)
+
+ggplot(decomp_stl_combined_log, aes(x = Date, y = Quant, col=set)) +
+  geom_line() + 
+  facet_grid(Type ~ ., scales = "free_y", switch = "y") +
+  labs(x = "Time", y = NULL,
+       title = "Time Series Decomposition by STL (log quantity)") +
+  theme_ts
+
+ggsave("Output/Countries/Colombia/Plots/decomp_combined_log_c1k.jpg", width = 8, height = 8)
+```
+
+# Simple forecasting models
+
+```{r simple forecasting} 
+#Average Method 
+Average_Method<-meanf(training_log, h = len_dec+len_inv)
+#Naive Method
+Naive_Method<-naive(training_log, h = len_dec+len_inv)
+#Seasonal Naive Method
+Seasonal_Naive_Method<-snaive(training_log, h = len_dec+len_inv) 
+#Drift Method
+Drift_Method<-rwf(training_log, h = len_dec+len_inv, drift = TRUE)
+
+
+
+autoplot(training_log) +
+   autolayer(validation_log-(retrend_log-trend_log[1])-reseasonal_log, series="Validation")+
+     autolayer(Average_Method,
+             series="Mean", PI=FALSE) +
+   autolayer(Naive_Method,
+             series="Naïve", PI=FALSE) +
+   autolayer(Seasonal_Naive_Method,
+             series="Seasonal naïve", PI=FALSE) +
+   autolayer(Drift_Method,
+             series = "Drift", PI = FALSE)+
+   ggtitle("Forecasts for Random Component: simple log models") +
+   xlab("Year") + ylab( paste(item, "\n logged, detrended and de-seasonalized"))+
+   guides(colour=guide_legend(title="Forecast"))
+ggsave("Output/Countries/Colombia/Plots/simple_log_total_c1k.jpg", width = 10, height = 5)
+```
+
+## Summarize performance
+
+```{r performance} 
+
+c1k_week_quantity_models<-as.data.frame(validation)
+colnames(c1k_week_quantity_models)<-"Actual"
+c1k_week_quantity_models$TransactionYear<-c1k_week$week_number_year[(nrow(c1k_week)-len_dec-len_inv+1):nrow(c1k_week)]
+c1k_week_quantity_models$week_number<-c1k_week$week_number[(nrow(c1k_week)-len_dec-len_inv+1):nrow(c1k_week)]
+c1k_week_quantity_models$TransactionTime<-paste0(c1k_week_quantity_models$TransactionYear,"-", c1k_week_quantity_models$week_number, "-3")%>%as.Date("%Y-%W-%w")
+
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Average_Method", pred_value = Average_Method$mean)
+
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Naive_Method", pred_value = Naive_Method$mean)
+
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Seasonal_Naive_Method", pred_value = Seasonal_Naive_Method$mean)
+
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Drift_Method", pred_value = Drift_Method$mean)
+
+# re-trended and re-seasonalized data: plots
+c1k_week_quantity_models_plot<-gather(c1k_week_quantity_models%>%select(-c("Actual", "TransactionYear", "week_number")), model, quantity, Average_Method:Drift_Method, factor_key=TRUE)
+#for club 6107 run the following:
+#c1k_week_quantity_models_plot<-gather(c1k_week_quantity_models%>%select(-c("Actual", "TransactionYear", "week_number")), model, quantity, factor_key=TRUE)
+c1k_week_quantity_models_plot$model<-as.character(c1k_week_quantity_models_plot$model)
+c1k_week_quantity_models_plot$quantity<-as.numeric(c1k_week_quantity_models_plot$quantity)
+
+c1k_week_int_Actual<-c1k_week%>%ungroup()%>%select(c("TransactionTime", "quantity_avrg"))
+c1k_week_int_Actual$model<-"Actual"
+c1k_week_int_Actual$quantity<-as.numeric(c1k_week_int_Actual$quantity_avrg)
+c1k_week_int_Actual<- c1k_week_int_Actual[(nrow(c1k_week)-len_dec-len_inv+1):nrow(c1k_week),]
+
+
+c1k_week_int_Actual$quantity_avrg<-NULL
+
+c1k_week_quantity_models_plot<-rbind(as.data.frame(c1k_week_int_Actual), as.data.frame(c1k_week_quantity_models_plot))
+
+```
+
+# Arima: auto.arima
+
+```{r autoarima}  
+Simple_Arima<- auto.arima(training_log)
+summary(Simple_Arima)
+
+fc_Simple_Arima_1<- forecast(Simple_Arima, len_dec+len_inv, bootstrap = TRUE)
+
+#Graph the forecasted results 
+autoplot(fc_Simple_Arima_1) +
+   autolayer(log(validation)-(retrend_log-trend_log[1])-reseasonal_log, series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+
+
+#Checking accuracy
+cr_Simple_Arima_1<-checkresiduals(fc_Simple_Arima_1)
+print(cr_Simple_Arima_1$data.name)
+print(cr_Simple_Arima_1$p.value)
+
+# Bring fc_Simple_Arima_1$mean back through de-trending and de-seasonalizing
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Simple_Arima_1", pred_value = fc_Simple_Arima_1$mean)
+
+``` 
+
+# ARIMA double season
+
+
+```{r ARIMA double season}
+#this arima model uses fourier and the three seasonality periods obtained above.
+
+Arima_AIC <- auto.arima(training_log)
+bestfit <- list(aicc=Arima_AIC$aicc, i=0, j=0, fit=Arima_AIC)
+
+fc_ARIMA_fourier<- forecast(Arima_AIC, h = len_dec+len_inv)
+autoplot(fc_ARIMA_fourier) +
+   autolayer(log(validation)-(retrend_log-trend_log[1])-reseasonal_log, series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+
+
+  
+#choose the best model by AICc
+for(i in 1:3) {
+  for (j in 1:3){
+    z1 <- fourier(ts(training_log, frequency= season1), K=i)
+    z2 <- fourier(ts(training_log, frequency= season2), K=j)
+    Arima_Seasons1_2 <- auto.arima(training_log, xreg=cbind(z1, z2), seasonal=F)
+    if(Arima_Seasons1_2$aicc < bestfit$aicc) {
+      bestfit <- list(aicc=Arima_Seasons1_2$aicc, i=i, j=j, Arima_Seasons1_2=Arima_Seasons1_2)
+    }
+  }
+}
+bestfit
+
+fc_Arima_Seasons1_2 <- forecast(bestfit$fit, 
+               xreg=cbind(
+                 fourier(ts(training_log, frequency=52), K=bestfit$i, h=len_dec+len_inv),
+                 fourier(ts(training_log, frequency=25), K=bestfit$j, h=len_dec+len_inv)))
+
+fc_Arima_Seasons1_2 <- forecast(bestfit$fit, h=len_dec+len_inv)
+                 
+autoplot(fc_Arima_Seasons1_2) +
+   autolayer(validation_log-(retrend_log-trend_log[1])-reseasonal_log, series = "Logged Quantity")+
+   xlab("Year") + ylab("Logged Quantity Sold of Kitchen Trash Bags")+
+   guides(colour=guide_legend(title="Validation Set")) 
+
+cr_ARIMA_seasons1_2<-checkresiduals(fc_Arima_Seasons1_2) 
+print(cr_ARIMA_seasons1_2$data.name)
+print(cr_ARIMA_seasons1_2$p.value)
+# Bring fc_ARIMA$mean back through de-trending and de-seasonalizing
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Arima_Seasons1_2", pred_value = fc_Arima_Seasons1_2$mean)
+
+```
+
+# ARIMA Model: ARIMA single season
+This section uses grid to tune the K parameter to get the Fourier regressor
+
+```{r ARIMA single season}
+##Finding best fit model 
+Arima_Fourier_AIC<-list(aicc=Inf)
+for(K in seq(25)) {
+  fit <- auto.arima(training_log, xreg=fourier(training_log, K=K),
+    seasonal=FALSE)
+  if(fit[["aicc"]] < Arima_Fourier_AIC[["aicc"]]) {
+    Arima_Fourier_AIC <- fit
+    bestK <- K
+  }
+}
+Arima_Fourier_AIC
+
+fc_Arima_Fourier_AIC <- forecast(Arima_Fourier_AIC,xreg=fourier(training_log, K=bestK, h=len_dec+len_inv))
+autoplot(fc_Arima_Fourier_AIC) + autolayer(log(validation)-(retrend_log-trend_log[1])-reseasonal_log, series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+
+cr_ARIMA_Fourier_AIC<-checkresiduals(fc_Arima_Fourier_AIC)
+print(cr_ARIMA_Fourier_AIC$data.name)
+print(cr_ARIMA_seasons1_2$p.value)
+
+# Bring fc_Arima_Fourier_AIC$mean back through de-trending and de-seasonalizing
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "Arima_Fourier_AIC", pred_value = fc_Arima_Fourier_AIC$mean)
+
+```
+
+# Visualization of 3 ARIMA models
+
+```{r ARIMA visualization}
+# before de-trending and de-seasoning
+autoplot(training_log) +
+   autolayer(validation_log-(retrend_log-trend_log[1])-reseasonal_log, series="Validation", PI=FALSE)+
+   autolayer(fc_Simple_Arima_1,
+             series="Default Arima", PI=FALSE) +
+   autolayer(fc_Arima_Seasons1_2,
+             series="Fourier double seasons", PI=FALSE) +
+   autolayer(fc_Arima_Fourier_AIC,
+             series="Fourier single season", PI=FALSE)+
+   ggtitle(paste("Forecast for Log Quantity Sold of", item, "\n", country, ": Club", club)) +
+   xlab("Year") + ylab(paste(item,"\n detrended and de-seasonalized"))+
+   guides(colour=guide_legend(title="Forecast"))
+
+ggsave("Output/Countries/Colombia/Plots/ARIMA_log_total_weekly_c1k.jpg", width = 10, height = 5)
+
+autoplot(validation_log-(retrend_log-trend_log[1])-reseasonal_log, series="Validation")+
+   autolayer(fc_Simple_Arima_1,
+             series="Default Arima", PI=FALSE) +
+   autolayer(fc_Arima_Seasons1_2,
+             series="Fourier double seasons", PI=FALSE) +
+   autolayer(fc_Arima_Fourier_AIC,
+             series="Fourier single season", PI=FALSE)+
+   ggtitle(paste("Forecast for Log Quantity Sold of", item, "\n", country, ": Club", club)) +
+   xlab("Year") + ylab(paste(item,"\n detrended and de-seasonalized"))+
+   guides(colour=guide_legend(title="Forecast"))
+
+ggsave("Output/Countries/Colombia/Plots/ARIMA_log_total_weekly1_c1k.jpg", width = 10, height = 5)
+
+decomp_stl<- data.table(Quant = c(t_log, as.numeric(decompose_log$time.series)),
+                         Date = rep(c1k_week$TransactionTime[1:(nrow(c1k_week)-len_dec-len_inv)], ncol(decompose_log$time.series)+1),
+                         Type = factor(rep(c("original data", colnames(decompose_log$time.series)),
+                                       each = nrow(decompose_log$time.series)),
+                                       levels = c("original data", colnames(decompose_log$time.series))))
+
+decomp_ARIMA_forecast_log<-data.table(Quant=c(fc_Simple_Arima_1$mean+reseasonal_log+(retrend_log-trend_log[1]), fc_Arima_Seasons1_2$mean+reseasonal_log+(retrend_log-trend_log[1]), fc_Arima_Fourier_AIC$mean+reseasonal_log+(retrend_log-trend_log[1]), reseasonal_log, (retrend_log-trend_log[1]), fc_Simple_Arima_1$mean, fc_Arima_Seasons1_2$mean, fc_Arima_Fourier_AIC$mean), 
+                                Date = rep(c1k_week$TransactionTime[(nrow(c1k_week)-len_dec-len_inv+1): nrow(c1k_week)], ncol(decompose_log$time.series)+5), 
+                                Type = factor(rep(c(rep("log quantity", 3), colnames(decompose_log$time.series)[1:2], rep(colnames(decompose_log$time.series)[3], 3)),
+                                       each = len_dec+len_inv),
+                                       levels = c("log quantity", colnames(decompose_log$time.series))))
+decomp_ARIMA_forecast_log$set<-rep(c("default arima", "Fourier double seasons", "Fourier single season", "forecast seasonal", "forecast trend", "default arima", "Fourier double seasons", "Fourier single season"), each=len_dec+len_inv)
+
+decomp_ARIMA_combined_log<-rbind(decomp_stl_training_log, decomp_ARIMA_forecast_log)
+
+
+ggplot(decomp_ARIMA_combined_log, aes(x = Date, y = Quant, col=set)) +
+  geom_line() + 
+  facet_grid(Type ~ ., scales = "free_y", switch = "y") +
+  labs(x = "Time", y = NULL,
+       title = "Decomposition by STL (log quantity) and ARIMA predictions") +
+  theme_ts
+ggsave("Output/Countries/Colombia/Plots/ARIMA_log_grid_weekly_c1k.jpg", width = 10, height = 5)
+
+
+ggplot(decomp_ARIMA_combined_log[decomp_ARIMA_combined_log$Date>=(max(decomp_ARIMA_combined_log$Date, na.rm = TRUE)-119),], aes(x = Date, y = Quant, col=set)) +
+  geom_line() +   facet_grid(Type ~ ., scales = "free_y", switch = "y") +
+  labs(x = "Time", y = NULL,
+       title = "Decomposition by STL (log quantity) and ARIMA predictions") +
+  theme_ts
+ggsave("Output/Countries/Colombia/Plots/ARIMA_log_grid_weekly1_c1k.jpg", width = 10, height = 5)
+
+```
+
+# TBATS
+
+```{r TBATS}
+# Uses a combination of Fourier terms with an exponential smoothing state space model and a Box-Cox transformation. Seasonality is allowed to change slowly over time.
+
+#Feed Raw Data to this model [with seasonality, trend and outliers]
+fit_TBATS_Raw_1<- tbats(t_log, use.box.cox = NULL, use.trend = TRUE, use.damped.trend = NULL, seasonal.periods = 52, use.arma.errors = TRUE, biasadj = TRUE)
+
+
+fc_TBATS_Raw_1<- forecast(fit_TBATS_Raw_1, h=len_dec+len_inv, bootstrap = TRUE) #TBATS(1, {0,0}, 0.915, {<52,5>})
+autoplot(fc_TBATS_Raw_1) + autolayer(log(validation), series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+checkresiduals(fc_TBATS_Raw_1)
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "fc_TBATS_Raw_1", pred_value = fc_TBATS_Raw_1$mean)
+
+#Feed Raw Data to this model [with seasonality, trend and outliers] [2 seasonal periods]
+fit_TBATS_Season1_2<- tbats(t_log, use.box.cox = NULL, use.trend = NULL, use.damped.trend = NULL, seasonal.periods = c(season2,season1), use.arma.errors = TRUE, biasadj = TRUE)
+
+fc_TBATS_Season1_2<- forecast(fit_TBATS_Season1_2, h=len_dec+len_inv, bootstrap = TRUE) 
+autoplot(fc_TBATS_Season1_2) + autolayer(log(validation), series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+checkresiduals(fc_TBATS_Season1_2) 
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "fc_TBATS_Season1_2", pred_value = fc_TBATS_Season1_2$mean)
+
+## TBATS Model with top 3 seasonal periods 
+fc_TBATS_Season2_3<- forecast(tbats(t_log, use.box.cox = NULL, use.trend = NULL, use.damped.trend = NULL, seasonal.periods = c(season2,season3), use.arma.errors = TRUE, biasadj = TRUE),h=len_dec+len_inv)  
+autoplot(fc_TBATS_Season2_3)+ autolayer(log(validation), series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+
+checkresiduals(fc_TBATS_Season2_3)
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "fc_TBATS_Season2_3", pred_value = fc_TBATS_Season2_3$mean)
+
+## TBATS Model with top 2 and 3 seasonal periods 
+fc_TBATS_Season1_3 <- forecast(tbats(t_log, seasonal.periods=c(season1,season3)), h=len_dec+len_inv)  
+autoplot(fc_TBATS_Season1_3)+ autolayer(log(validation), series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+
+checkresiduals(fc_TBATS_Season1_3)
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "fc_TBATS_Season1_3", pred_value = fc_TBATS_Season1_3$mean)
+
+## really simple tbats
+fit_TBATS_NoSeason<- tbats(t_log)
+fc_TBATS_NoSeason<- forecast(fit_TBATS_NoSeason, h=len_dec+len_inv)
+autoplot(fc_TBATS_NoSeason) + autolayer(validation_log)
+autoplot(fc_TBATS_NoSeason)+ autolayer(log(validation), series = "TBATS No Season")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   ggtitle(paste("Forecast for Quantity Sold of", item, "\n", country, ": Club", club)) +
+   guides(colour=guide_legend(title="Validation Set")) 
+checkresiduals(fc_TBATS_NoSeason) 
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "fc_TBATS_NoSeason", pred_value = fc_TBATS_NoSeason$mean)
+
+```
+
+# visualization of 5 TBATS models   
+
+```{r TBATS visualization}
+autoplot(t_log) +
+   autolayer(validation_log, series="Validation", PI=FALSE)+
+   autolayer(fc_TBATS_Raw_1,
+             series="Single Season", PI=FALSE) +
+   autolayer(fc_TBATS_Season1_2,
+             series=paste("Season", season1, "and", season2), PI=FALSE) +
+   autolayer(fc_TBATS_Season2_3,
+             series=paste("Season", season2, "and", season3), PI=FALSE) +
+   autolayer(fc_TBATS_Season1_3,
+             series=paste( "Season", season1, "and", season3), PI=FALSE) +
+   autolayer(fc_TBATS_NoSeason,
+             series="Season Unspecified", PI=FALSE) +
+   ggtitle(paste("Forecast for Logged Quantity Sold of", item, "\n", country, ": Club", club)) +
+   xlab("Year") + ylab(paste(item, "\n detrended and de-seasonalized"))+
+   guides(colour=guide_legend(title="Forecast"))
+
+ggsave("Output/Countries/Colombia/Plots/tbats_log_total_weekly_c1k.jpg", width = 10, height = 5)
+
+autoplot(validation_log, series="Validation", PI=FALSE)+
+      autolayer(fc_TBATS_Raw_1,
+             series="Single Season", PI=FALSE) +
+   autolayer(fc_TBATS_Season1_2,
+             series=paste("Season", season1, "and", season2), PI=FALSE) +
+   autolayer(fc_TBATS_Season2_3,
+             series=paste("Season", season2, "and", season3), PI=FALSE) +
+   autolayer(fc_TBATS_Season1_3,
+             series=paste("Season", season1, "and", season3), PI=FALSE) +
+   autolayer(fc_TBATS_NoSeason,
+             series="Season Unspecified", PI=FALSE) +
+   ggtitle(paste("Forecast for Logged Quantity Sold of", item, "\n", country, ": Club", club)) +
+   xlab("Year") + ylab(paste(item, "\n detrended and de-seasonalized"))+
+   guides(colour=guide_legend(title="Forecast"))
+
+ggsave("Output/Countries/Colombia/Plots/tbats_log_total_weekly1_c1k.jpg", width = 10, height = 5)
+```
+
+# Neural network
+
+```{r NNETAR} 
+#Neural Networks (input detrneded and de-seasonalized data)
+#NNAR(p,P,k)m -> p = lagged inputs, P = equivalent to ARIMA(p,0,0)(P,0,0)m, k = nods in the single hidden layer 
+fit_NN_1<- nnetar(training_log, lambda = "auto")
+fc_NN_1<- forecast(fit_NN_1, h=len_dec+len_inv)
+autoplot(fc_NN_1) + autolayer(log(validation)-(retrend_log-trend_log[1])-reseasonal_log, series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+checkresiduals(fc_NN_1) 
+c1k_week_quantity_models<-performance_index_dtds(df_Actual = c1k_week_quantity_models, pred_name = "fc_NN_1", pred_value = fc_NN_1$mean)
+
+# Neural networks (input raw data)
+fit_NN_Raw<- nnetar(t_log, lambda = "auto")
+fc_NN_Raw<- forecast(fit_NN_Raw, h=len_dec+len_inv)
+autoplot(fc_NN_Raw) + autolayer(log(validation), series = "Logged Quantity")+
+   xlab("Year") + ylab(paste("Logged Quantity Sold of", item))+
+   guides(colour=guide_legend(title="Validation Set")) 
+checkresiduals(fc_NN_Raw)
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "fc_NN_Raw", pred_value = fc_NN_Raw$mean)
+```
+
+# Combination of Uni-variate Forecasts
+
+```{r combination,echo=FALSE}
+tsmodels<-c("Average_Method","Naive_Method","Seasonal_Naive_Method","Drift_Method","Simple_Arima_1","Arima_Seasons1_2", "Arima_Fourier_AIC","fc_TBATS_Raw_1","fc_TBATS_Season1_2","fc_TBATS_Season2_3","fc_TBATS_Season1_3","fc_TBATS_NoSeason","fc_NN_1","fc_NN_Raw")
+best_two_total<-tsmodels[rank(mget(paste0("RMSE_", tsmodels, "_total"))%>%as.numeric())<=2]
+
+Combination_uni<-(1/2*(c1k_week_quantity_models%>%select(best_two_total[1])+c1k_week_quantity_models%>%select(best_two_total[2])))%>%unlist()
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "Combination_uni", pred_value = log(Combination_uni))
+
+```
+
+# Summarize performance of current models 
+
+```{r current models performance}
+tsmodels<-c("Average_Method","Naive_Method","Seasonal_Naive_Method","Drift_Method","Simple_Arima_1","Arima_Seasons1_2", "Arima_Fourier_AIC","fc_TBATS_Raw_1","fc_TBATS_Season1_2","fc_TBATS_Season2_3","fc_TBATS_Season1_3","fc_TBATS_NoSeason","fc_NN_1","fc_NN_Raw", "Combination_uni")
+indices<-c("MEAN", "RMSE", "MAE", "MPE", "MAPE", "MASE")
+performance_week_total<-matrix(nrow = length(tsmodels), ncol = length(indices))
+for (i in 1:length(tsmodels)){
+  for (j in 1:length(indices)){
+    performance_week_total[i, j]=get(paste0(indices[j], "_", tsmodels[i], "_total"))
+  }
+}
+performance_week_total<-as.data.frame(performance_week_total)
+colnames(performance_week_total)<-indices
+rownames(performance_week_total)<-tsmodels
+write.csv(x = performance_week_total, file = "Output/Countries/Colombia/Tables/performance_week_total_c1k.csv")
+
+performance_week_target<-matrix(nrow = length(tsmodels), ncol = length(indices))
+for (i in 1:length(tsmodels)){
+  for (j in 1:length(indices)){
+    performance_week_target[i, j]=get(paste0(indices[j], "_", tsmodels[i], "_target"))
+  }
+}
+performance_week_target<-as.data.frame(performance_week_target)
+colnames(performance_week_target)<-indices
+rownames(performance_week_target)<-tsmodels
+write.csv(x = performance_week_total, file = "Output/Countries/Colombia/Tables/performance_week_target_c1k.csv")
+# re-trended and re-seasonalized plots
+
+c1k_week_quantity_models_plot<-gather(c1k_week_quantity_models%>%select(-c("Actual", "TransactionYear", "week_number")), model, quantity_avrg, Average_Method:Combination_uni, factor_key=TRUE)
+c1k_week_quantity_models_plot$TransactionTime<-as.Date(c1k_week_quantity_models_plot$TransactionTime)
+c1k_week_quantity_models_plot$model<-as.character(c1k_week_quantity_models_plot$model)
+c1k_week_quantity_models_plot$quantity_avrg<-as.numeric(c1k_week_quantity_models_plot$quantity_avrg)
+
+c1k_week_int_Actual<-c1k_week%>%ungroup()%>%select(c("TransactionTime", "quantity_avrg"))
+c1k_week_int_Actual$model<-"Actual"
+c1k_week_int_Actual$TransactionTime<-as.Date(c1k_week_int_Actual$TransactionTime)
+c1k_week_int_Actual$quantity_avrg<-as.numeric(c1k_week_int_Actual$quantity_avrg)
+c1k_week_quantity_models_plot<-rbind(c1k_week_int_Actual, c1k_week_quantity_models_plot)
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Average_Method"]<-"Average Model"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Naive_Method"]<-"Naive Model"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Seasonal_Naive_Method"]<-"Seasonal Naive Model"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Drift_Method"]<-"Drift Model"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Simple_Arima_1"]<-"Default ARIMA"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Arima_Seasons1_2"]<-"Double Season ARIMA"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Arima_Fourier_AIC"]<-"Single Season ARIMA"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Raw_1"]<-"TBATS model 1 with Raw Data"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Season1_2"]<-paste("TBATS model 2 with Seasons", season1, "and", season2)
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Season2_3"]<-paste("TBATS model 2 with Seasons", season2, "and", season3)
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Season1_3"]<-paste("TBATS model 2 with Seasons", season1, "and", season3)
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_NoSeason"]<-"TBATS No Season"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_NN_1"]<-"Neural Networks De-trended and De-seasonalized"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_NN_Raw"]<-"Neural Networks on Raw Data"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Combination_uni"]<- "Combination Models Univariate"
+# plots: simple models
+c1k_week_quantity_models_plot_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual" |c1k_week_quantity_models_plot$model=="Average Model"
+                          |c1k_week_quantity_models_plot$model=="Naive Model"
+                          |c1k_week_quantity_models_plot$model=="Seasonal Naive Model"
+                          |c1k_week_quantity_models_plot$model=="Drift Model"),]
+ggplot(data=c1k_week_quantity_models_plot_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Simple Models Forecast","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Logged Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/simple_log_weekly_pred_c1k.jpg", width = 7, height = 4)
+
+ggplot(data=c1k_week_quantity_models_plot_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle(paste("Simple Models, retrended and reseasonalized","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/simple_log_weekly_pred1_c1k.jpg", width = 7, height = 4)
+
+# plots: ARMIA models 
+c1k_week_quantity_models_plot_ARIMA_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="Default ARIMA" |c1k_week_quantity_models_plot$model=="Double Season ARIMA"
+                          |c1k_week_quantity_models_plot$model=="Single Season ARIMA"),]
+ggplot(data=c1k_week_quantity_models_plot_ARIMA_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("ARIMA Models, retrended and reseasonalized","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/ARIMA_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+
+ggplot(data=c1k_week_quantity_models_plot_ARIMA_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle("ARIMA Models")
+ggsave("Output/Countries/Colombia/Plots/ARIMA_log_weekly_pred1_c1k.jpg", width = 8, height = 4)
+
+
+# plots: TBATS models
+c1k_week_quantity_models_plot_TBATS_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="TBATS model 1 with Raw Data" |c1k_week_quantity_models_plot$model==paste("TBATS model 2 with Seasons", season1, "and", season2)
+|c1k_week_quantity_models_plot$model==paste("TBATS model 2 with Seasons", season2, "and", season3)
+|c1k_week_quantity_models_plot$model==paste("TBATS model 2 with Seasons", season1, "and", season3)
+|c1k_week_quantity_models_plot$model=="TBATS No Season"),]
+ggplot(data=c1k_week_quantity_models_plot_TBATS_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("TBATS Models","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Logged Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/TBATS_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+ggplot(data=c1k_week_quantity_models_plot_TBATS_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle(paste("TBATS Models","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Logged Quantity Sold of", item))
+
+ggsave("Output/Countries/Colombia/Plots/TBATS_log_weekly_pred1_c1k.jpg", width = 5, height = 4)
+
+# plots: neural network
+c1k_week_quantity_models_plot_nn_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="Neural Networks De-trended and De-seasonalized"
+|c1k_week_quantity_models_plot$model=="Neural Networks on Raw Data"),]
+ggplot(data=c1k_week_quantity_models_plot_nn_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Neural Network Models","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/nn_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+ggplot(data=c1k_week_quantity_models_plot_nn_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle(paste("Neural Network Models","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/nn_log_weekly_pred1_c1k.jpg", width = 6, height = 5)
+
+# plots: combined models 
+c1k_week_quantity_models_plot_combined_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="Combination Models Univariate"),]
+ggplot(data=c1k_week_quantity_models_plot_combined_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Combined Models","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/combined_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+ggplot(data=c1k_week_quantity_models_plot_combined_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle(paste("Combined Models","\nQuantity Sold of", item, "\n",country, ": Club", club)) + xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/combined_log_weekly_pred1_c1k.jpg", width = 6, height = 5)
+```
+
+# Machine learning setup
+
+```{r ML}
+# This part of the code is based on https://rpubs.com/mattBrown88/TimeSeriesMachineLearning
+# feature engineering 
+c1k_week$month<-month(c1k_week$TransactionTime)
+c1k_week$month<-as.factor(c1k_week$month)
+c1k_week$log1p_transaction_avrg<-log1p(c1k_week$transaction_avrg) #
+c1k_week$log1p_members_avrg<-log1p(c1k_week$members_avrg) #
+c1k_week$log1p_sales_local_avrg<-log1p(c1k_week$sales_local_avrg) #
+c1k_week$log1p_sales_usd_avrg<-log1p(c1k_week$sales_usd_avrg) #
+c1k_week$log1p_category_sales_local_avrg<-log1p(c1k_week$category_sales_local_avrg) #
+c1k_week$log1p_quantity_avrg<-log1p(c1k_week$quantity_avrg) #
+c1k_week$log1p_category_sales_local_avrg<- log1p(c1k_week$category_sales_local_avrg)
+c1k_week$log1p_category_sales_usd_avrg<-log1p(c1k_week$category_sales_usd_avrg)
+c1k_week$log1p_category_quantity_avrg<- log1p(c1k_week$category_quantity_avrg)
+c1k_week$log1p_salePrice_local_avrg<- log1p(c1k_week$salePrice_local_avrg)
+c1k_week$log1p_salePrice_usd_avrg<- log1p(c1k_week$salePrice_usd_avrg)
+
+t_v_c1k<-c1k_week
+t_v_c1k<- t_v_c1k[order(t_v_c1k$TransactionTime),]%>%ungroup()
+t_v_c1k<- feature_engineering(t_v_c1k, c("quantity_avrg", "transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg","salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg","log1p_category_sales_local_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg"))
+# creating training matrix
+t_v_c1k<- fastDummies::dummy_cols(t_v_c1k, select_columns = c("week_number_year", "week_number", "month"))
+t_v_c1k$month<-NULL
+t_v_c1k$week_number_year<-NULL
+t_v_c1k$week_number<-NULL
+
+train_c1k<-t_v_c1k[1:(nrow(t_v_c1k)-len_dec-len_inv),]
+test_c1k<-t_v_c1k[(nrow(t_v_c1k)-len_dec-len_inv+1):nrow(t_v_c1k),]
+c1k_week_quantity_models_train<-data.frame(Actual=train_c1k$quantity_avrg, TransactionTime=train_c1k$TransactionTime)
+c1k_week_quantity_models_train<-c1k_week_quantity_models_train[rowSums(is.na(train_c1k))==0,]
+
+```
+
+# XGB model
+
+```{r XGB MODEL}
+trainc1k_XGB<-train_c1k%>%select(-c("transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg","salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg", "log1p_transaction_avrg", "log1p_members_avrg", "log1p_sales_local_avrg", "log1p_sales_usd_avrg", "log1p_category_sales_local_avrg","log1p_category_sales_usd_avrg", "log1p_category_quantity_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg","TransactionTime"))
+testc1k_XGB<-test_c1k%>%select(-c("transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg","salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg", "log1p_transaction_avrg", "log1p_members_avrg", "log1p_sales_local_avrg", "log1p_sales_usd_avrg", "log1p_category_sales_local_avrg","log1p_category_sales_usd_avrg", "log1p_category_quantity_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg","TransactionTime"))
+
+trainTask <- makeRegrTask(data = trainc1k_XGB, target = "quantity_avrg")
+testTask <- makeRegrTask(data = testc1k_XGB, target = "quantity_avrg")
+
+xgb_learner <- makeLearner(
+  "regr.xgboost",
+  predict.type = "response",
+  par.vals = list(
+    objective = "reg:squarederror",
+    eval_metric = "rmse",
+    nrounds = 200
+  )
+)
+
+# Create a model
+xgb_model <- mlr::train(xgb_learner, task = trainTask)
+
+xgb_params <- makeParamSet(
+  # The number of trees in the model (each one built sequentially)
+  makeIntegerParam("nrounds", lower = 100, upper = 500),
+  # number of splits in each tree
+  makeIntegerParam("max_depth", lower = 1, upper = 10),
+  # "shrinkage" - prevents overfitting
+  makeNumericParam("eta", lower = .1, upper = .5),
+  # L2 regularization - prevents overfitting
+  makeNumericParam("lambda", lower = -1, upper = 0, trafo = function(x) 10^x)
+)
+control <- makeTuneControlRandom(maxit = 1)
+resample_desc <- makeResampleDesc("CV", iters = 10)
+tuned_params <- tuneParams(
+  learner = xgb_learner,
+  task = trainTask,
+  resampling = resample_desc,
+  par.set = xgb_params,
+  control = control
+)
+xgb_tuned_learner <- setHyperPars(
+  learner = xgb_learner,
+  par.vals = tuned_params$x
+)
+xgb_model <- mlr::train(xgb_tuned_learner, trainTask)
+XGBoost_pred <- predict(xgb_model ,testTask)
+XGBoost_pred_train <- predict(xgb_model ,trainTask)
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "XGBoost_train", pred_value = log(XGBoost_pred_train$data$response[rowSums(is.na(trainc1k_XGB))==0]))
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "XGBoost", pred_value = log(XGBoost_pred$data$response))
+```
+
+# Random Forest 1
+
+```{r RF 1, fig.width=12}  
+trainc1k_RF<-train_c1k%>%select(-c("transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg","salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg", "log1p_transaction_avrg", "log1p_members_avrg", "log1p_sales_local_avrg", "log1p_sales_usd_avrg", "log1p_category_sales_local_avrg","log1p_category_sales_usd_avrg", "log1p_category_quantity_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg","TransactionTime"))
+testc1k_RF<-test_c1k%>%select(-c("transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg","salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg", "log1p_transaction_avrg", "log1p_members_avrg", "log1p_sales_local_avrg", "log1p_sales_usd_avrg", "log1p_category_sales_local_avrg","log1p_category_sales_usd_avrg", "log1p_category_quantity_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg","TransactionTime"))
+
+RF_1 <- randomForest(quantity_avrg ~. , data = trainc1k_RF,
+                     ntree = 1000, mtry = 3, nodesize = 5, importance = TRUE, na.action = na.omit)
+
+varImpPlot(RF_1, main = "Variable importance")
+  
+RF1_pred<-predict(RF_1, testc1k_RF)
+
+RF1_pred_training<- predict(RF_1, trainc1k_RF) 
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "RF1_train", pred_value = log(RF1_pred_training[rowSums(is.na(trainc1k_XGB))==0]))
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "RF_1", pred_value = log(RF1_pred))
+
+
+```
+
+# Random Forest 2
+
+```{r model evaluation}
+#Defining the Control
+trControl<- trainControl(method = "cv", number = 10, search = "grid")
+metric <- "RMSE"
+seed<- set.seed(156230)
+```
+
+## Step 1 Run a Default model
+
+```{r Random Forest 2 (1)}
+rf_default<- caret::train(quantity_avrg~ .
+                                   , data = trainc1k_RF
+                   , method = "rf", metric = "RMSE", trControl = trControl, na.action=na.exclude)
+rf_default
+   #RMSE was used to select the optimal model using the smallest value.
+
+```
+
+## Step 2 Search best mtry
+
+```{r Random Forest 2 (2)}
+   
+#mtry is the number of variables available for splitting at each tree node
+#our train_c1k_RF has 250 total variables
+tuneGrid<- expand.grid(.mtry = seq(1, ncol(trainc1k_RF), by=5))
+rf_mtry<- caret::train(quantity_avrg ~ ., 
+                   data = trainc1k_RF, 
+                method = "rf", metric = "RMSE", tuneGrid = tuneGrid, trControl = trControl, importance = TRUE, na.action=na.exclude)
+rf_mtry
+   #RMSE was used to select the optimal model using the smallest value.
+
+best_mtry<- rf_mtry$bestTune$mtry #store the best value for mtry
+min(rf_mtry$results$RMSE)
+```
+
+## Step 3 Search Best Maxnodes
+
+```{r Random Forest 2 (3)}
+store_maxnode<- list()  # create a list to find the optimal max of nodes
+tuneGrid<- expand.grid(.mtry= best_mtry)
+for (maxnodes in c(1, 2, 3, 4, 5, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)){
+   set.seed(156230)
+   rf_maxnode<- caret::train(quantity_avrg ~ ., 
+                   data = trainc1k_RF, 
+                   method = "rf", metric = "RMSE", tuneGrid = tuneGrid, trControl = trControl, importance = TRUE, maxnodes = maxnodes, nodesize = 4, na.action = na.exclude)
+   current_iteration<- toString(maxnodes)
+   store_maxnode[[current_iteration]]<- rf_maxnode
+}
+
+results_node<- resamples(store_maxnode)
+results_node<-summary(results_node)
+nnode_optimal<-results_node$models[results_node$statistics$RMSE%>%as.data.frame()%>%select("Mean")%>%as.matrix()%>%as.numeric()%>%which.min()]%>%as.numeric()
+```
+
+## Step 4 Search the best ntrees
+
+```{r Random Forest 2 (4)}
+store_maxtrees <- list()
+for (ntree in c(10, 20, 30, 40, 50, 100 , 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700)) {
+    set.seed(156230)
+    rf_maxtrees <- caret::train(quantity_avrg ~ ., 
+                   data = trainc1k_RF,
+        method = "rf",
+        metric = "RMSE",
+        tuneGrid = tuneGrid,
+        trControl = trControl,
+        importance = TRUE,
+        maxnodes = nnode_optimal,
+        ntree = ntree,
+        na.action = na.exclude)
+    key <- toString(ntree)
+    store_maxtrees[[key]] <- rf_maxtrees
+}
+results_tree <- resamples(store_maxtrees)
+results_tree<-summary(results_tree)
+ntrees_optimal<-results_tree$models[results_tree$statistics$RMSE%>%as.data.frame()%>%select("Mean")%>%as.matrix()%>%as.numeric()%>%which.min()]%>%as.numeric()
+```
+
+## Step 5 Run model with the best specifications found above
+
+```{r Random Forest 2 (5)}
+fit_rf<- caret::train(quantity_avrg ~ ., 
+                   data = trainc1k_RF,
+        method = "rf",
+        metric = "RMSE",
+        tuneGrid = tuneGrid,
+        trControl = trControl,
+        importance = TRUE,
+        maxnodes = nnode_optimal,
+        ntree = ntrees_optimal,
+        na.action = na.exclude)
+
+fit_rf
+```
+
+## Step 6 Evaluate Model
+
+```{r Random Forest 2 (6), fig.width=12}
+pred_rf2<- predict(fit_rf,test_c1k, predict.all = TRUE)
+pred_rf2_train<- predict(fit_rf,train_c1k, predict.all = FALSE)
+pred_rf2_train<-merge(data.frame(week=1:nrow(train_c1k)), data.frame(week=pred_rf2_train%>%names(), pred=pred_rf2_train), all.x = TRUE)
+
+# Visualize Results
+
+pred_rf2_dt<- data.table(Predicted_Quantity = pred_rf2, TransactionTime = test_c1k$TransactionTime)
+
+ggplot() +
+ geom_line(pred_rf2_dt, mapping = aes(TransactionTime, Predicted_Quantity,color = "Predicted Quantity"))+
+ geom_line(test_c1k, mapping = aes(TransactionTime, quantity_avrg, color = "Actual Quantity"))+
+ labs(x = "Time", y = "Quantity", title = paste("Random Forest","\nQuantity Sold of", item, "\n",country, ": Club", club)) +
+ scale_color_manual(values = c("Predicted Quantity" = 'darkblue', "Actual Quantity" = 'red')) 
+
+varImp(fit_rf)
+plot(varImp(fit_rf)) #variable of importance
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "RF2_train", pred_value = log(pred_rf2_train$pred[rowSums(is.na(trainc1k_XGB))==0]))
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "RF_2", pred_value = log(pred_rf2))
+```
+
+# Random Forest 3
+
+```{r Random Forest 3, fig.width=12}
+RF_3<- randomForest(quantity_avrg ~ ., 
+                   data = trainc1k_RF,
+        mtry = best_mtry,
+        importance = TRUE,
+        maxnodes = nnode_optimal,
+        ntree = ntrees_optimal,
+        na.action = na.exclude)
+ 
+varImpPlot(RF_3)
+pred_rf3 <- predict(RF_3, test_c1k)
+pred_rf3<- data.table(Predicted_Quantity = pred_rf3, TransactionTime = test_c1k$TransactionTime)
+pred_rf3_train <- predict(RF_3, train_c1k)
+
+ggplot() +
+ geom_line(pred_rf3, mapping = aes(TransactionTime, Predicted_Quantity,color = "Predicted Quantity"))+
+ geom_line(test_c1k, mapping = aes(TransactionTime, quantity_avrg, color = "Actual Quantity"))+
+ labs(x = "Time", y = "Quantity", title = "Random Forest forecasts")  +
+ scale_color_manual(values = c("Predicted Quantity" = 'darkblue', "Actual Quantity" = 'red')) 
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "RF3_train", pred_value = log(pred_rf3_train[rowSums(is.na(trainc1k_XGB))==0]))
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "RF_3", pred_value = log(pred_rf3$Predicted_Quantity))
+ 
+```
+
+# Linear regressions: prepare datasets 
+
+```{r L E R}
+#GLMNET does not use the formula method (y ~ x). So prior to modeling we need to create our feature and target set.
+
+train_c1k_GLMNET<-drop_na(train_c1k%>%select(-c("transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg", "salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg", "log1p_transaction_avrg", "log1p_members_avrg", "log1p_sales_local_avrg",  "log1p_sales_usd_avrg", "log1p_category_sales_local_avrg","log1p_category_sales_usd_avrg", "log1p_category_quantity_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg", "TransactionTime")))
+test_c1k_GLMNET<-drop_na(test_c1k%>%select(-c("transaction_avrg", "members_avrg", "sales_local_avrg", "exchange_rate_avrg", "sales_usd_avrg", "category_sales_local_avrg", "category_sales_usd_avrg", "category_quantity_avrg", "salePrice_local_avrg","salePrice_usd_avrg", "log1p_quantity_avrg", "log1p_transaction_avrg", "log1p_members_avrg", "log1p_sales_local_avrg",  "log1p_sales_usd_avrg", "log1p_category_sales_local_avrg","log1p_category_sales_usd_avrg", "log1p_category_quantity_avrg","log1p_salePrice_local_avrg","log1p_salePrice_usd_avrg", "TransactionTime")))
+
+y_train<- data.matrix(train_c1k_GLMNET["quantity_avrg"])
+x_train<-data.matrix(subset(train_c1k_GLMNET, select=-c(quantity_avrg)))
+
+y_test<- data.matrix(test_c1k_GLMNET["quantity_avrg"])
+x_test<-data.matrix(subset(test_c1k_GLMNET, select=-c(quantity_avrg)))
+
+```
+
+## Ridge
+
+```{r RIDGE}
+#Ridge is performed with alpha=0
+
+ridge <- glmnet(x_train,y_train,alpha = 0)
+
+plot(ridge, xvar = "lambda")
+
+ridge$lambda %>% head()
+#Tuning to find the right value for lamda 
+ridge_cv <- cv.glmnet(x_train,y_train,alpha = 0)
+plot(ridge_cv)
+# as we constrain our coefficients with log ( λ ) ≥ 0 penalty, the MSE rises considerably. The numbers at the top of the plot (38) just refer to the number of variables in the model. Ridge regression does not force any variables to exactly zero so all features will remain in the model 
+
+#The first and second vertical dashed lines represent the λ value with the minimum MSE and the largest  λ value within one standard error of the minimum MSE. 
+#extract our minimum and one standard error MSE and λ values
+min(ridge_cv$cvm) #minimum MSE
+ridge_cv$lambda.min #lambda for this minimum MSE
+
+ridge_cv$cvm[ridge_cv$lambda == ridge_cv$lambda.1se]  # 1 st.error of min MSE
+ridge_cv$lambda.1se  # lambda for this MSE
+
+ridge_min <- glmnet(x_train,y_train, alpha = 0)
+plot(ridge_min, xvar = "lambda")
+abline(v = log(ridge_cv$lambda.1se), col = "red", lty = "dashed")
+
+#Most Influential Feautures to predict accuracy
+coef(ridge_cv, s = "lambda.1se") %>%
+  tidy() %>%
+  filter(row != "(Intercept)") %>%
+  top_n(10, wt = abs(value)) %>%
+  ggplot(aes(value, reorder(row, value), color = value > 0)) +
+  geom_point(show.legend = FALSE) +
+  ggtitle("Influential variables") +
+  xlab("Coefficient") +
+  ylab(NULL)
+
+min(ridge_cv$cvm)
+#Ridge model will retian all variables. Therefore, a ridge model is good only if we believe that we need to retain all features in the model yet reduce the noise that less influential variable smay create and minimize collinearity. Ridge doesn't perform feature selection 
+##PREDICTING
+ridge_pred<- predict(ridge_cv, s=ridge_cv$lambda.1se, x_test, type = "response")
+ridge_pred_train<-predict(ridge_cv, s=ridge_cv$lambda.1se, x_train, type = "response")
+ridge_pred_train<-merge(data.frame(week=1:nrow(train_c1k)), data.frame(week=ridge_pred_train%>%rownames()%>%as.numeric(), pred=ridge_pred_train), all.x = TRUE)
+colnames(ridge_pred_train)<-c("week", "pred")
+#Graph
+pred_ridge<- data.frame(Predicted_Quantity = ridge_pred, TransactionTime = test_c1k$TransactionTime)
+colnames(pred_ridge)<-c("Predicted_Quantity", "TransactionTime")
+ggplot() +
+ geom_line(pred_ridge, mapping = aes(TransactionTime, Predicted_Quantity, color = "Predicted Quantity"))+
+ geom_line(test_c1k, mapping = aes(TransactionTime, quantity_avrg, color = "Actual Quantity"))+
+ labs(x = "Time", y = "Quantity", title = "Ridge") + scale_color_manual(values = c("Predicted Quantity" = 'darkblue', "Actual Quantity" = 'red')) 
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "Ridge_train", pred_value = log((ridge_pred_train[rowSums(is.na(trainc1k_XGB))==0,])%>%select(pred)%>%unlist()))
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "Ridge", pred_value = log(ridge_pred))
+```
+
+## Lasso
+
+```{r Lasso}
+
+lasso <- glmnet(x_train,y_train,alpha = 1)
+
+plot(lasso, xvar = "lambda")
+# when log(λ)=− 3 all 8 variables are in the model, when log(λ)=−1 2 variables are retained
+ 
+#Tuning to find the right value for lambda 
+lasso_cv <- cv.glmnet(x_train,y_train,alpha = 1)
+plot(lasso_cv) #We see that we can minimize our MSE by applying approximately −9≤log(λ)≤−4
+
+#extract our minimum and one standard error MSE and λ values
+min(lasso_cv$cvm) #minimum MSE
+lasso_cv$lambda.min #lambda for this minimum MSE
+
+lasso_cv$cvm[lasso_cv$lambda == lasso_cv$lambda.1se]  # 1 st.error of min MSE
+lasso_cv$lambda.1se  # lambda for this MSE
+
+lasso_min <- glmnet(x_train,y_train, alpha = 1)
+plot(lasso_min, xvar = "lambda")
+abline(v = log(lasso_cv$lambda.min), col = "red", lty = "dashed")
+abline(v = log(lasso_cv$lambda.1se), col = "red", lty = "dashed")
+
+#Most Influential Feautures to predict accuracy
+coef(lasso_cv, s = "lambda.1se") %>%
+  tidy() %>%
+  filter(row != "(Intercept)") %>%
+  ggplot(aes(value, reorder(row, value), color = value > 0)) +
+  geom_point(show.legend = FALSE) +
+  ggtitle("Influential variables") +
+  xlab("Coefficient") +
+  ylab(NULL) # The 3 most influential variables are "Exchange Rate" "Sales_Local" and "Lag Quantity"
+
+
+#Minimum RIDGE MSE
+min(ridge_cv$cvm)
+#minimum LASSO MSE 
+min(lasso_cv$cvm)
+
+##PREDICTING
+lasso_pred<- predict(lasso, s=lasso_cv$lambda.min, x_test, type = "response")
+lasso_pred_train<-predict(lasso, s=lasso_cv$lambda.min, x_train, type = "response")
+results_train<-merge(data.frame(week=1:nrow(train_c1k)), data.frame(week=lasso_pred_train%>%rownames()%>%as.numeric(), pred=lasso_pred_train), all.x = TRUE)
+colnames(results_train)<-c("week", "pred")
+#Graph
+pred_lasso<- data.table(Predicted_Quantity = lasso_pred, TransactionTime = test_c1k$TransactionTime)
+colnames(pred_lasso)<-c("Predicted_Quantity", "TransactionTime")
+ggplot() +
+ geom_line(pred_lasso, mapping = aes(TransactionTime, Predicted_Quantity, color = "Predicted Quantity"))+
+ geom_line(test_c1k, mapping = aes(TransactionTime, quantity_avrg, color = "Actual Quantity"))+
+ labs(x = "Time", y = "Quantity", title = "Lasso") + scale_color_manual(values = c("Predicted Quantity" = 'darkblue', "Actual Quantity" = 'red')) 
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "Lasso_train", pred_value = log(lasso_pred_train[rowSums(is.na(trainc1k_XGB))==0]))
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "Lasso", pred_value = log(lasso_pred))
+```
+
+
+## Elastic Net
+
+```{r elastic Net}
+#http://uc-r.github.io/regularized_regression 
+
+#TUNING
+
+#Tune λ and the alpha parameters.
+# maintain the same folds across all models
+fold_id <- sample(1:10, size = length(y_train), replace=TRUE)
+
+# search across a range of alphas
+tuning_grid <- tibble::tibble(
+  alpha      = seq(0, 1, by = .1),
+  mse_min    = NA,
+  mse_1se    = NA,
+  lambda_min = NA,
+  lambda_1se = NA
+)
+
+#Now we can iterate over each alpha value, apply a CV elastic net, and extract the minimum and one standard error MSE values and their respective λ values.
+for(i in seq_along(tuning_grid$alpha)) {
+  
+  # fit CV model for each alpha value
+  fit <- cv.glmnet(x_train, y_train, alpha = tuning_grid$alpha[i], foldid = fold_id)
+  
+  # extract MSE and lambda values
+  tuning_grid$mse_min[i]    <- fit$cvm[fit$lambda == fit$lambda.min]
+  tuning_grid$mse_1se[i]    <- fit$cvm[fit$lambda == fit$lambda.1se]
+  tuning_grid$lambda_min[i] <- fit$lambda.min
+  tuning_grid$lambda_1se[i] <- fit$lambda.1se
+}
+
+tuning_grid
+
+#plot the MSE 
+elastic_tuning<-tuning_grid %>%mutate(se = mse_1se - mse_min)
+
+elastic_tuning%>%
+  ggplot(aes(alpha, mse_min)) +
+  geom_line(size = 2) +
+  geom_ribbon(aes(ymax = mse_min + se, ymin = mse_min - se), alpha = .25) +
+  ggtitle("MSE ± one standard error")
+
+alpha_optimal<-(elastic_tuning%>%as.data.frame()%>%select("alpha"))[which.min(elastic_tuning%>%as.data.frame()%>%select("mse_1se")%>%unlist()%>%as.numeric()),1]
+#advantage of the elastic net model is that it enables effective regularization via the ridge penalty with the feature selection characteristics of the lasso penalty
+
+
+elastic_cv<-cv.glmnet(x_train,y_train,alpha = alpha_optimal)
+
+elastic_pred<- predict(elastic_cv, s=elastic_cv$lambda.1se, x_test, type = "response")
+elastic_pred_train<- predict(elastic_cv, s=elastic_cv$lambda.1se, x_train, type = "response")
+results_train<-merge(data.frame(week=1:nrow(train_c1k)), data.frame(week=elastic_pred_train%>%rownames()%>%as.numeric(), pred=elastic_pred_train), all.x = TRUE)
+colnames(results_train)<-c("week", "pred")
+#Graph
+pred_elastic_cv<- data.table(Predicted_Quantity = elastic_pred, TransactionTime = test_c1k$TransactionTime)
+colnames(pred_elastic_cv)<-c("Predicted_Quantity", "TransactionTime")
+
+ggplot() +
+ geom_line(pred_elastic_cv, mapping = aes(TransactionTime, Predicted_Quantity, color = "Predicted Quantity"))+
+ geom_line(test_c1k, mapping = aes(TransactionTime, quantity_avrg, color = "Actual Quantity"))+
+ labs(x = "Time", y = "Quantity", title = "Elastic Net") + scale_color_manual(values = c("Predicted Quantity" = 'darkblue', "Actual Quantity" = 'red'))
+
+c1k_week_quantity_models_train<-performance_index_raw(df_Actual = c1k_week_quantity_models_train, pred_name = "elastic_train", pred_value = log(elastic_pred_train[rowSums(is.na(trainc1k_XGB))==0]))
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "elastic", pred_value = log(elastic_pred))
+```
+
+# Combination of models: ml
+
+```{r combination models ml}
+# Best two models with total prediction
+tsmodels<-c("Average_Method","Naive_Method","Seasonal_Naive_Method","Drift_Method","Simple_Arima_1","Arima_Seasons1_2", "Arima_Fourier_AIC","fc_TBATS_Raw_1","fc_TBATS_Season1_2","fc_TBATS_Season2_3","fc_TBATS_Season1_3","fc_TBATS_NoSeason","fc_NN_1","fc_NN_Raw")
+tsmodels_ml<-c("XGBoost", "RF_1", "RF_2","RF_3", "Ridge", "Lasso", "elastic")
+best_two_total_ml<-tsmodels_ml[rank(mget(paste0("RMSE_", tsmodels_ml, "_total"))%>%as.numeric())<=2]
+# Best two models with target
+best_two_target_ml<-tsmodels_ml[rank(mget(paste0("RMSE_", tsmodels_ml, "_target"))%>%as.numeric())<=2]
+# 
+Combination_ml<-(1/4*(c1k_week_quantity_models%>%select(best_two_total_ml[1])+c1k_week_quantity_models%>%select(best_two_total_ml[2])+c1k_week_quantity_models%>%select(best_two_target_ml[1])+c1k_week_quantity_models%>%select(best_two_target_ml[2])))%>%unlist()
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "Combination_ml", pred_value = log(Combination_ml))
+
+```
+
+# Combining best traditional and machine learning models
+
+```{r best models}
+# Best two models with total prediction
+best_two_total<-tsmodels[rank(mget(paste0("RMSE_", tsmodels, "_total"))%>%as.numeric())<=2]
+# 
+Combination_uni_ml<-(1/2*(c1k_week_quantity_models%>%select(best_two_total_ml[1])+c1k_week_quantity_models%>%select(best_two_total_ml[2])+c1k_week_quantity_models%>%select(best_two_total[1])+c1k_week_quantity_models%>%select(best_two_total[2])))%>%unlist()
+
+c1k_week_quantity_models<-performance_index_raw(df_Actual = c1k_week_quantity_models, pred_name = "Combination_uni_ml", pred_value = log(Combination_uni_ml))
+best_two_total
+tsmodels<-c("Average_Method","Naive_Method","Seasonal_Naive_Method","Drift_Method","Simple_Arima_1","Arima_Seasons1_2", "Arima_Fourier_AIC","fc_TBATS_Raw_1","fc_TBATS_Season1_2","fc_TBATS_Season2_3","fc_TBATS_Season1_3","fc_TBATS_NoSeason","fc_NN_1","fc_NN_Raw", "Combination_uni")
+
+best_two_total_ml
+```
+
+# Summarize performance of current models 
+
+```{r performance matrix}
+tsmodels_ml<-c("XGBoost", "RF_1", "RF_2","RF_3", "Ridge", "Lasso", "elastic", "Combination_ml", "Combination_uni_ml")
+indices<-c("MEAN", "RMSE", "MAE", "MPE", "MAPE", "MASE")
+performance_week_total_ml<-matrix(nrow = length(tsmodels_ml), ncol = length(indices))
+for (i in 1:length(tsmodels_ml)){
+  for (j in 1:length(indices)){
+    performance_week_total_ml[i, j]=get(paste0(indices[j], "_", tsmodels_ml[i], "_total"))
+  }
+}
+performance_week_total_ml<-as.data.frame(performance_week_total_ml)
+colnames(performance_week_total_ml)<-indices
+rownames(performance_week_total_ml)<-tsmodels_ml
+write.csv(x = performance_week_total_ml, file = "Output/Countries/Colombia/Tables/performance_week_total_ml_c1k.csv")
+
+performance_week_target_ml<-matrix(nrow = length(tsmodels_ml), ncol = length(indices))
+for (i in 1:length(tsmodels_ml)){
+  for (j in 1:length(indices)){
+    performance_week_target_ml[i, j]=get(paste0(indices[j], "_", tsmodels_ml[i], "_target"))
+  }
+}
+performance_week_target_ml<-as.data.frame(performance_week_target_ml)
+colnames(performance_week_target_ml)<-indices
+rownames(performance_week_target_ml)<-tsmodels_ml
+write.csv(x = performance_week_target_ml, file = "Output/Countries/Colombia/Tables/performance_week_target_ml_c1k.csv")
+
+tsmodels_ml_train<-c("XGBoost_train", "RF1_train", "RF2_train","RF3_train", "Ridge_train", "Lasso_train", "elastic_train")
+indices<-c("MEAN", "RMSE", "MAE", "MPE", "MAPE", "MASE")
+performance_week_total_ml_train<-matrix(nrow = length(tsmodels_ml_train), ncol = length(indices))
+for (i in 1:length(tsmodels_ml_train)){
+  for (j in 1:length(indices)){
+    performance_week_total_ml_train[i, j]=get(paste0(indices[j], "_", tsmodels_ml_train[i], "_total"))
+  }
+}
+performance_week_total_ml_train<-as.data.frame(performance_week_total_ml_train)
+colnames(performance_week_total_ml_train)<-indices
+rownames(performance_week_total_ml_train)<-tsmodels_ml_train
+write.csv(x = performance_week_total_ml_train, file = "Output/Countries/Colombia/Tables/performance_week_total_ml_train_c1k.csv")
+
+```
+
+# Visualization of machine learning models
+
+```{r visualization ML models}
+# re-trended and re-seasonalized plots
+
+c1k_week_quantity_models_plot<-gather(c1k_week_quantity_models%>%select(-c("Actual", "TransactionYear", "week_number")), model, quantity_avrg, Average_Method:Combination_uni_ml, factor_key=TRUE)
+c1k_week_quantity_models_plot$TransactionTime<-as.Date(c1k_week_quantity_models_plot$TransactionTime)
+c1k_week_quantity_models_plot$model<-as.character(c1k_week_quantity_models_plot$model)
+c1k_week_quantity_models_plot$quantity_avrg<-as.numeric(c1k_week_quantity_models_plot$quantity_avrg)
+
+c1k_week_int_Actual<-c1k_week%>%ungroup()%>%select(c("TransactionTime", "quantity_avrg"))
+c1k_week_int_Actual$model<-"Actual"
+c1k_week_int_Actual$TransactionTime<-as.Date(c1k_week_int_Actual$TransactionTime)
+c1k_week_int_Actual$quantity_avrg<-as.numeric(c1k_week_int_Actual$quantity_avrg)
+c1k_week_quantity_models_plot<-rbind(c1k_week_int_Actual, c1k_week_quantity_models_plot)
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Average_Method"]<-"Average Model"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Naive_Method"]<-"Naive Model"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Seasonal_Naive_Method"]<-"Seasonal Naive Model"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Drift_Method"]<-"Drift Model"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Simple_Arima_1"]<-"Default ARIMA"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Arima_Seasons1_2"]<-"Double Season ARIMA"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="Arima_Fourier_AIC"]<-"Single Season ARIMA"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Raw_1"]<-"TBATS model 1 with Raw Data"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Season1_2"]<-paste("TBATS model 2 with Seasons", season1, "and", season2)
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Season2_3"]<-paste("TBATS model 2 with Seasons", season2, "and", season3)
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_Season1_3"]<-paste("TBATS model 2 with Seasons", season1, "and", season3)
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_TBATS_NoSeason"]<-"TBATS No Season"
+
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_NN_1"]<-"Neural Networks De-trended and De-seasonalized"
+c1k_week_quantity_models_plot$model[c1k_week_quantity_models_plot$model=="fc_NN_Raw"]<-"Neural Networks on Raw Data"
+
+# plots: XGBoost models 
+c1k_week_quantity_models_plot_XGBoost_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="XGBoost"),]
+ggplot(data=c1k_week_quantity_models_plot_XGBoost_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("XG Boosting Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/XGBoost_log_weekly_pred_c1k.jpg", width = 8, height = 4) 
+ggplot(data=c1k_week_quantity_models_plot_XGBoost_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle(paste("XG Boosting Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/XGBoost_log_weekly_pred1.jpg", width = 8, height = 4)
+
+# plots: RF models 
+c1k_week_quantity_models_plot_RF_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="RF_1"
+|c1k_week_quantity_models_plot$model=="RF_2"),]
+ggplot(data=c1k_week_quantity_models_plot_RF_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Random Forest Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/RF_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+ggplot(data=c1k_week_quantity_models_plot_RF_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))+ggtitle(paste("Random Forest Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/RF_log_weekly_pred1_c1k.jpg", width = 8, height = 4)
+
+# plots: Ridge and LASSO models 
+c1k_week_quantity_models_plot_RidgeLASSO_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="Ridge"
+|c1k_week_quantity_models_plot$model=="Lasso"),]
+ggplot(data=c1k_week_quantity_models_plot_RidgeLASSO_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Ridge and Lasso Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/RidgeLASSO_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+ggplot(data=c1k_week_quantity_models_plot_RidgeLASSO_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Ridge and Lasso Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))
+ggsave("Output/Countries/Colombia/Plots/RidgeLASSO_log_weekly_pred1_c1k.jpg", width = 8, height = 4)
+
+# plots: elastic models 
+c1k_week_quantity_models_plot_elastic_log<-c1k_week_quantity_models_plot[(c1k_week_quantity_models_plot$model=="Actual"
+|c1k_week_quantity_models_plot$model=="elastic"),]
+ggplot(data=c1k_week_quantity_models_plot_elastic_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Elastic Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))
+ggsave("Output/Countries/Colombia/Plots/elastic_log_weekly_pred_c1k.jpg", width = 8, height = 4)
+ggplot(data=c1k_week_quantity_models_plot_elastic_log)+geom_line(aes(x=TransactionTime, y=quantity_avrg, col=model))+ggtitle(paste("Elastic Models","\nQuantity Sold of", item, "\n",country, ": Club", club))+ xlab("Month") + ylab(paste("Quantity Sold of", item))+xlim(max(c1k_week$TransactionTime, na.rm = TRUE)-120, max(c1k_week$TransactionTime, na.rm = TRUE))
+ggsave("Output/Countries/Colombia/Plots/elastic_log_weekly_pred1_c1k.jpg", width = 8, height = 4)
+save.image(paste0("Output/Countries/Colombia/", club, ".RData"))
+```
+
