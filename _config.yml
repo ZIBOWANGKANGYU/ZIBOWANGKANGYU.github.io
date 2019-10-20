@@ -16,10 +16,10 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Mark Wang's Projects"
+title                    : "Mark Wang"
 title_separator          : "-"
-name                     : "Mark Wang"
-description              : "Master of International Economics from UC San Diego."
+name                     : "Mark Wang's projects"
+description              : "Data scientist focused on NLP, sales and prediction, graduate from UC San Diego."
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -109,8 +109,9 @@ author:
   name             : "Mark Wang"
   avatar           : "/images/Mark_profile.jpg"
   bio              : "Master of International Economics from UC San Diego. Projects include natural langugae processing, dynamic processes and causal inference"
-  location         : "San Diego, CA"
+  location         : "Washington, DC"
   email            :
+  linkedin         : "kangyumarkwang"
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
