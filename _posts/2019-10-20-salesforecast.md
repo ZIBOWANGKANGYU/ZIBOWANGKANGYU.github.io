@@ -10,7 +10,9 @@ excerpt: "time series, machine learning, forecasting"
 
 I finished this project as an algorithm development intern in a wholesale club. Using historical data on sales, price and exchange rate, this project predicts sales at the weekly level four months into the future.
 Combining traditional time series methods with machine learning tools, this project is able to cut forecast RMSE by half. However,  tremondous space of improment still exists. Currently, machine learning models does not significanty improve the performance of well-developed traditional models. I figure that a larger dataset, with more contectual information is hopeful to make machine learning more powerful. Also, the performance of uni-variate neural network model is satisfactory, and the use of more complex deep learning models will also be key to improving performance.
+
 For code and more visualizations, please see [Project page](https://zibowangkangyu.github.io/sales_forecast).
+
 The project folder can be found [here](https://github.com/ZIBOWANGKANGYU/sales_forecast)
 
 # Raw data
