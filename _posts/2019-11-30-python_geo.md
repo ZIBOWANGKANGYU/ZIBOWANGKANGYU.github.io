@@ -3,7 +3,6 @@ title: "Geographical Analyses in Python"
 date: 2019-11-30
 tags: [GIS, python, interactive mapping]
 header:
-   image: "/images/salesforecast/plots/decomp.jpg"
 excerpt: "GIS, Python, interactive mapping"
 ---
 # Abstract
@@ -32,4 +31,4 @@ The average public transportation commute time is 37.89 minutes
 
 I measured the convenience of public transportation by the ratio of public transportation commuting time to car commuting time. Then I used `bokeh` package to develop an [interactive](https://zibowangkangyu.github.io/pythonDS/accessibility_map_Helsinki) map showing this index. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/static.jpg" alt="Interactive map: convenience of public transportation">
+<img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/interactive.jpg" alt="Interactive map: convenience of public transportation">
