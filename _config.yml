@@ -107,8 +107,8 @@ analytics:
 # Site Author
 author:
   name             : "Mark Wang"
-  avatar           : "/images/Mark_profile.jpg"
-  bio              : "Master of International Economics from UC San Diego. Projects include natural langugae processing, dynamic processes and causal inference"
+  avatar           : "/images/Mark_profile.png"
+  bio              : "Graduate student in data science. Projects include natural langugae processing, geospatial analyses and applied research."
   location         : "Washington, DC"
   email            :
   linkedin         : "kangyumarkwang"
@@ -119,9 +119,6 @@ author:
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/zibowangkangyu"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"

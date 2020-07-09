@@ -3,11 +3,12 @@ title: "Demographic Characters and Access to Public Transit in Greater Vancouver
 date: 2020-07-10
 tags: [GIS, python, transit]
 header:
+   image: "/images/migration.jpg"
 excerpt: "GIS, Python, transit"
 ---
 # Abstract
 
-Vancouver has one of the best pulic transit systems in North America. However, to what extent is access to public transit equiutable among residents in the metropolitan area? What demographic characters are related to differences in access to public transit? This project inrends to explore accessibility to Vancouver's public transit system across regions. I will use [GTFS data](https://gtfs.org/) on Vancouver's mass transit system as of June 6, 2020. 
+Vancouver has one of the best public transit systems in North America. However, to what extent is access to public transit equiutable among residents in the metropolitan area? What demographic characters are related to differences in access to public transit? This project will explore accessibility to Vancouver's public transit system across regions. I will use [GTFS data](https://gtfs.org/) on Vancouver's mass transit system as of June 6, 2020. 
 
 This will be a series of blog posts and data visualizations. I will firstly explore the public transit data and present how public transit routes and stops are distributed geographically. I will then use the 2016 Census data to break the Greater Vancouer area into dissemination areas, and measure their access to public transit. I will then dig into 2016 Census data, espcially records about people's commute, trying to identify the gap betweem the demand and supply of public transit. 
 
@@ -41,22 +42,26 @@ As shown in the histogram below, each route has in average about 200 trips. Rout
 
 A trip is geographically linked with a shape, which describes the path that a vehicle travels along a route alignment. According to GTFS, stops on a trip should "lie within a small distance of the shape for that trip."
 
-From the shape table, we can get more information on the length of each trip. For Vancouver, the median trip distance is 12.00 km. Route West Coast Express is 67.9 kms long, which is the longest route. Its map is presented below.
+From the shape table, we can get more information on the length of each trip. For Vancouver, the median trip distance is 12.00 km. Route West Coast Express is 67.9 kms long, which is the longest route. This route streches from downtown Vancouver to Mission, a town far up the Fraser River. Its map is presented below.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/lines_max.png" alt="Histogram: longest route">
 
 - Stops
 
-GTFS defines stops as places where vehicles pick up or drop off riders. Vancouver 
+GTFS defines stops as places where vehicles pick up or drop off riders. Vancouver's public 8919 stops are identified.
+
+The following maps show all the stops, and the ten buziest among them. Most of the buziest stops are in the downtown area. 
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops.png" alt="Histogram: longest route">
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops_bz.png" alt="Histogram: longest route">
 
 - Stop-times
 
+The stop-times table gives detailed information on times that a vehicle arrives at and departs from stops for each trip. With this data, we can have many important insights into the the operation of stops in the transit system. 
 
-his static map shows the distance from each cell to the nearest road. Firstly, `dissolve` function of `geopandas` is used to combine multiple road geometries into one single multiple shape. Then, `nearest_points` of `shapely` is used to identify closet point on the roads shape that is closest to each cell (centroid used). I then used the `distance` method to calculate the minimum distances. 
+How busy are the public transit stops? The map below colors the 
 
-I also calculated the weighted public transportation commuting time from each cell to the Railway Station. I calculated the centroid of each population cell, and got their commuting times by overlapping them with the travel time shapefile. Then I averaged average commuting time weighted by populaiton. 
-
-The average public transportation commute time is 37.89 minutes
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/static.png" alt="Static map: distance to road">
 
