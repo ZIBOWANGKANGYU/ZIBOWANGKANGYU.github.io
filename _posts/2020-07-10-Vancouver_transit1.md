@@ -3,7 +3,7 @@ title: "Demographic Characters and Access to Public Transit in Greater Vancouver
 date: 2020-07-10
 tags: [GIS, python, transit]
 header:
-   image: "/images/migration.jpg"
+   image: "/images/Vancouver_photo.jpg"
 excerpt: "GIS, Python, transit"
 ---
 # Abstract
@@ -50,7 +50,7 @@ From the shape table, we can get more information on the length of each trip. Fo
 
 GTFS defines stops as places where vehicles pick up or drop off riders. Vancouver's public 8919 stops are identified.
 
-The following maps show all the stops, and the ten buziest among them. Most of the buziest stops are in the downtown area. 
+The following maps show all the stops, and the ten busiest among them. Most of the busiest stops are in the downtown area. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops.png" alt="Histogram: longest route">
 
@@ -60,13 +60,6 @@ The following maps show all the stops, and the ten buziest among them. Most of t
 
 The stop-times table gives detailed information on times that a vehicle arrives at and departs from stops for each trip. With this data, we can have many important insights into the the operation of stops in the transit system. 
 
-How busy are the public transit stops? The map below colors the 
+How busy are the public transit stops? The map below colors the stops by the number of trips they serve have per day. The busier stops are in the City of Vancouver, as well as long major roads. 
 
-
-<img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/static.png" alt="Static map: distance to road">
-
-# Interactive mapping
-
-I measured the convenience of public transportation by the ratio of public transportation commuting time to car commuting time. Then I used `bokeh` package to develop an [interactive](https://zibowangkangyu.github.io/pythonDS/accessibility_map_Helsinki) map showing this index. 
-
-<img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/interactive.png" alt="Interactive map: convenience of public transportation">
+<img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/stops_cnt_trips.png" alt="Static map: stops by number of trips per day">
