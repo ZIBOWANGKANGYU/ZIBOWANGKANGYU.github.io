@@ -13,9 +13,39 @@ This will be a series of blog posts and data visualizations. I will firstly expl
 
 The project folder can be found [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit)
 
-# Static mapping
+# Data
 
-This static map shows the distance from each cell to the nearest road. Firstly, `dissolve` function of `geopandas` is used to combine multiple road geometries into one single multiple shape. Then, `nearest_points` of `shapely` is used to identify closet point on the roads shape that is closest to each cell (centroid used). I then used the `distance` method to calculate the minimum distances. 
+I used two main data sources for this project. Detailed information on Vancouver's mass transit system is obtained through [Open Mobility Data](https://transitfeeds.com/) in the GTFS form. Canada's [2016 Census](https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/index-eng.cfm) data gives detailed informaion on the demographic characters of neighborhoods across the Greater Vancouver area. 
+
+## GTFS Data
+
+According to the [official website](https://gtfs.org/gtfs-background) of GTFS, it was originally known as Google Transit Feed Specification, a format of public transit data that is now used by urban transit agencies around the world. 
+
+GTFS provides two types of public transit information, namely `Static` and `Realtime`. `Static` data, generally speaking, provides information on how the transit system are **plannd** to run in a period. By contrast, `Realtime` data gives information about how the transit system is **actually running** in real time. This project only uses the `Static` part of GTFS data.
+
+There are various tables in the `Static` part of GTFS data. I mainly used five of them: `routes`, `shapes`, `stops`, `stop_times` and `trips`. 
+
+- Routes
+
+A route is a group of trips that are displayed to riders as a single service. There are 233 routes in Vancouver's public transit system, according to the data. Different modes of transportation are identified: Among all routes, 3 are subways, 1 is rail, 228 are buses, and 1 is ferry.
+
+- Trips
+
+A trip is a sequence of two or more stops that occur during a specific time period, adn one route usually has multiple trips. 122746 trips are identified in Vancouver: among them, route Expo Line has 4778 trips, which is the most among all routes, and route Dunbar/Downtown has 13 trips, which is the least among all routes.
+
+As shown in the histogram below, each route has in average about 200 trips. Routes with more than 1,000 trips are rare.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops_cnt_trips_hist.png" alt="Histogram: number of trips per route">
+
+- Shapes
+
+
+- Stops
+
+- Stop-times
+
+
+his static map shows the distance from each cell to the nearest road. Firstly, `dissolve` function of `geopandas` is used to combine multiple road geometries into one single multiple shape. Then, `nearest_points` of `shapely` is used to identify closet point on the roads shape that is closest to each cell (centroid used). I then used the `distance` method to calculate the minimum distances. 
 
 I also calculated the weighted public transportation commuting time from each cell to the Railway Station. I calculated the centroid of each population cell, and got their commuting times by overlapping them with the travel time shapefile. Then I averaged average commuting time weighted by populaiton. 
 
