@@ -39,8 +39,15 @@ As shown in the histogram below, each route has in average about 200 trips. Rout
 
 - Shapes
 
+A trip is geographically linked with a shape, which describes the path that a vehicle travels along a route alignment. According to GTFS, stops on a trip should "lie within a small distance of the shape for that trip."
+
+From the shape table, we can get more information on the length of each trip. For Vancouver, the median trip distance is 12.00 km. Route West Coast Express is 67.9 kms long, which is the longest route. Its map is presented below.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/lines_max.png" alt="Histogram: longest route">
 
 - Stops
+
+GTFS defines stops as places where vehicles pick up or drop off riders. Vancouver 
 
 - Stop-times
 
