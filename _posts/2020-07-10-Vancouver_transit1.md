@@ -62,4 +62,9 @@ The stop-times table gives detailed information on times that a vehicle arrives 
 
 How busy are the public transit stops? The map below colors the stops by the number of trips they serve have per day. The busier stops are in the City of Vancouver, as well as long major roads. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/pythonDS/plots/stops_cnt_trips.png" alt="Static map: stops by number of trips per day">
+<img src="{{ site.url }}{{ site.baseurl }}/iimages/Vancouver_transit/plots/stops_cnt_trips.png" alt="Static map: stops by number of trips per day">
+
+## 2016 Census Data
+
+[Canadian census](https://www12.statcan.gc.ca/census-recensement/index-eng.cfm) conducted in 2016 provides important demographic and socio-economic information of neighborhoods in the Greater Vancouver Area. The amount of data available from the census is enormous, and for this project, it is essential to how data is reported in a hierarchy of geographies. A useful graphical illustration can be found [here](https://www12.statcan.gc.ca/census-recensement/2016/ref/dict/figures/f1_1-eng.cfm). In short, this study utilizes data down to the Dissemination Area (DA) level, which according to Statistics Canada:
+>is a small, relatively stable geographic unit composed of one or more adjacent dissemination blocks with an average population of 400 to 700 persons based on data from the previous Census of Population Program. It is the smallest standard geographic area for which all census data are disseminated. 
