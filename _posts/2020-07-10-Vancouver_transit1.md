@@ -76,5 +76,27 @@ However, data at the DA level will also be aggregated to the Census Subdivision 
 
 ### DAs in GVA
 
-There are 3450 DAs in GVA. 
+There are 3450 DAs in GVA. The following map shows the boundaries of about 322 DAs in Burnaby CSD. 
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/DA_Burnaby.png" alt="Static map: DAs in the Burnaby Area">
+
+The following table summarizes the basic demographical and geographical characters of DAs in GVA. 
+|      |   pop_2016 |   total_private_dwellings |   total_private_dwellings_usual |   pop_per_km2 |   land_area_km2 |
+|------|------------|---------------------------|---------------------------------|---------------|-----------------|
+| mean |      714   |                     297.9 |                           278.5 |        6105.4 |             0.8 |
+| std  |      509.1 |                     254.3 |                           232.1 |       10170.7 |            14   |
+| min  |        0   |                       0   |                             0   |           0   |             0   |
+| 25%  |      477   |                     176   |                           165   |        2583.4 |             0.1 |
+| 50%  |      586   |                     229   |                           213   |        4091.7 |             0.1 |
+| 75%  |      766.5 |                     328   |                           311   |        6875.5 |             0.2 |
+| max  |     8778   |                    5631   |                          4923   |      454783   |           796.1 |
+
+- Population
+In average, each DA had 714 persons as of 2016 census. The following maps shows the population counts across DAs. DAs with most population are not concentrated in the downtown area. Instead, they are scattered in Surrey and Coquitlam. 
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/pop2016.png" alt="Population counts by DA">
+
+- Population density
+The following map 
+
 
