@@ -1,12 +1,12 @@
 ---
-title: "Demographic Characters and Access to Public Transit in Greater Vancouver"
+title: "Demographic Characters and Access to Public Transit in Greater Vancouver: Data Sources"
 date: 2020-07-10
 tags: [GIS, python, transit]
 header:
    image: "/images/Vancouver_photo.jpg"
 excerpt: "GIS, Python, transit"
 ---
-# Abstract
+# Summary
 
 Vancouver has one of the best public transit systems in North America. However, to what extent is access to public transit equiutable among residents in the metropolitan area? What demographic characters are related to differences in access to public transit? This project will explore accessibility to Vancouver's public transit system across regions. I will use [GTFS data](https://gtfs.org/) on Vancouver's mass transit system as of June 6, 2020. 
 
@@ -104,7 +104,12 @@ The following map shows the population density among DAs in GVA. The majority of
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/pop_dense2016.png" alt="Population counts by DA">
 
-The following map highlights the DAs with top 10% population density in GVA. 
+The following map highlights the DAs with top 10% population density in GVA. Most such DAs are distributed in downtown, Kitsilano and Fairview areas. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/pop_dense201610pc.png" alt="Population counts by DA">
+
+# Conclusion
+
+From data gathered from the 2016 census and GTFS dataset, we can extract variables that interest us. As a policy question, the study intends to figure out as Vancouver's public transit authority distributes additional transportation capacities, decide where and when it should prioritize to maximize the usage of public transit across the metropolitan area. We will discuss the key variables in the next post. 
+
 
