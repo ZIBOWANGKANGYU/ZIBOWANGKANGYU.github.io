@@ -17,5 +17,19 @@ Fortunately, Canada's 2016 census provides abundant information about residents'
 - people who cycle to work
 - people who commute to work with other methods
 
+As shown in the following chart, for most DAs, the majority of peole commute as drivers of private vehicles. However, there are a substantial number of DAs where around (or a little bit less than) half residents commute use public transit. For almost all DAs, only a tiny proportion of commuters bike, walk or use private vehicles as a passenger.
 
-Canada's 2016 census 
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_mode.png" alt="DA_mode">
+
+Where do people use public transit the most? As shown in the followng map, the corridor along Highway 1A from Mount Pleasant through East Vancouver, Metrotown to New Westerminster see relatively high proportion of transit use. In addition, areas including Surrey, South Vancouver and Sunset also have relatively high proportion of people using public transit. 
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_public_prop.png" alt="DA_public_prop">
+
+# Transit duration and destination
+
+The census also tells us about people's transit destinations, and the average commuting time of different DAs. As shown in the following chart, people living in DAs in the west part of the metropolitan area spend relatively less time commuting, whereas people living in areas in the east, including Burnaby, Coquitlam and Surrey spend longer time in commute. 
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_commute_duration.png.png" alt="DA_commute_duration">
+
+
+

@@ -6,7 +6,7 @@ header:
    image: "/images/Vancouver_photo.jpg"
 excerpt: "GIS, Python, transit"
 ---
-# Summary
+# About the Project
 
 Vancouver has one of the best public transit systems in North America. However, to what extent is access to public transit equiutable among residents in the metropolitan area? What demographic characters are related to differences in access to public transit? This project will explore accessibility to Vancouver's public transit system across regions. I will use [GTFS data](https://gtfs.org/) on Vancouver's mass transit system as of June 6, 2020. 
 
@@ -36,7 +36,7 @@ A trip is a sequence of two or more stops that occur during a specific time peri
 
 As shown in the histogram below, each route has in average about 200 trips. Routes with more than 1,000 trips are rare.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops_cnt_trips_hist.png" alt="Histogram: number of trips per route">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/stops_cnt_trips_hist.png" alt="Histogram: number of trips per route">
 
 - Shapes
 
@@ -44,7 +44,7 @@ A trip is geographically linked with a shape, which describes the path that a ve
 
 From the shape table, we can get more information on the length of each trip. For Vancouver, the median trip distance is 12.00 km. Route West Coast Express is 67.9 kms long, which is the longest route. This route streches from downtown Vancouver to Mission, a town far up the Fraser River. Its map is presented below.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/lines_max.png" alt="Histogram: longest route">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/lines_max.png" alt="Histogram: longest route">
 
 - Stops
 
@@ -52,9 +52,9 @@ GTFS defines stops as places where vehicles pick up or drop off riders. Vancouve
 
 The following maps show all the stops, and the ten busiest among them. Most of the busiest stops are in the downtown area. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops.png" alt="Histogram: longest route">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/stops.png" alt="Histogram: longest route">
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops_bz.png" alt="Histogram: longest route">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/stops_bz.png" alt="Histogram: longest route">
 
 - Stop-times
 
@@ -62,7 +62,7 @@ The stop-times table gives detailed information on times that a vehicle arrives 
 
 How busy are the public transit stops? The map below colors the stops by the number of trips they serve have per day. The busier stops are in the City of Vancouver, as well as long major roads. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/stops_cnt_trips.png" alt="Static map: stops by number of trips per day">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/stops_cnt_trips.png" alt="Static map: stops by number of trips per day">
 
 ## 2016 Census Data
 
@@ -78,38 +78,36 @@ However, data at the DA level will also be aggregated to the Census Subdivision 
 
 There are 3450 DAs in GVA. The following map shows the boundaries of about 322 DAs in Burnaby CSD. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/DA_Burnaby.png" alt="Static map: DAs in the Burnaby Area">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/DA_Burnaby.png" alt="Static map: DAs in the Burnaby Area">
 
 The following table summarizes the basic demographical and geographical characters of DAs in GVA. 
 
-|      |   pop_2016 |   total_private_dwellings |   total_private_dwellings_usual |   pop_per_km2 |   land_area_km2 |
-|------|------------|---------------------------|---------------------------------|---------------|-----------------|
-| mean |      714   |                     297.9 |                           278.5 |        6105.4 |             0.8 |
-| std  |      509.1 |                     254.3 |                           232.1 |       10170.7 |            14   |
-| min  |        0   |                       0   |                             0   |           0   |             0   |
-| 25%  |      477   |                     176   |                           165   |        2583.4 |             0.1 |
-| 50%  |      586   |                     229   |                           213   |        4091.7 |             0.1 |
-| 75%  |      766.5 |                     328   |                           311   |        6875.5 |             0.2 |
-| max  |     8778   |                    5631   |                          4923   |      454783   |           796.1 |
+|      | 2016 Pop.  |   Total Private Dwellings |   pop.per km2 | Land Area (km2) |
+|------|------------|---------------------------|---------------|-----------------|
+| mean |      714   |                     297.9 |        6105.4 |             0.8 |
+| std  |      509.1 |                     254.3 |       10170.7 |            14   |
+| min  |        0   |                       0   |           0   |             0   |
+| 25%  |      477   |                     176   |        2583.4 |             0.1 |
+| 50%  |      586   |                     229   |        4091.7 |             0.1 |
+| 75%  |      766.5 |                     328   |        6875.5 |             0.2 |
+| max  |     8778   |                    5631   |      454783   |           796.1 |
 
 - Population
 
 In average, each DA had 714 persons as of 2016 census. The following maps shows the population counts across DAs. DAs with most population are not concentrated in the downtown area. Instead, they are scattered in Surrey and Coquitlam. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/pop2016.png" alt="Population counts by DA">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/pop2016.png" alt="Population counts by DA">
 
 - Population density
 
 The following map shows the population density among DAs in GVA. The majority of DAs have relatively low population density, and dense DAs are mostly near the downtown area. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/pop_dense2016.png" alt="Population counts by DA">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/pop_dense2016.png" alt="Population counts by DA">
 
 The following map highlights the DAs with top 10% population density in GVA. Most such DAs are distributed in downtown, Kitsilano and Fairview areas. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit/plots/pop_dense201610pc.png" alt="Population counts by DA">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/pop_dense201610pc.png" alt="Population counts by DA">
 
 # Conclusion
 
 From data gathered from the 2016 census and GTFS dataset, we can extract variables that interest us. As a policy question, the study intends to figure out as Vancouver's public transit authority distributes additional transportation capacities, decide where and when it should prioritize to maximize the usage of public transit across the metropolitan area. We will discuss the key variables in the next post. 
-
-
