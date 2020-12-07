@@ -82,7 +82,7 @@ There are 3450 DAs in GVA. The following map shows the boundaries of about 322 D
 
 The following table summarizes the basic demographical and geographical characters of DAs in GVA.
 
-|      | 2016 Pop.  |   Total Private Dwellings |   pop.per km2 | Land Area (km2) |
+|      | 2016 Pop.  |   Total Private Dwellings |   Pop. per km2 | Land Area (km2) |
 |------|------------|---------------------------|---------------|-----------------|
 | mean |      714   |                     297.9 |        6105.4 |             0.8 |
 | std  |      509.1 |                     254.3 |       10170.7 |            14   |
