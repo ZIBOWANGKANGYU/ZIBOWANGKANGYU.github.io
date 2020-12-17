@@ -51,5 +51,5 @@ The census also tells us about people's transit destinations, and the average co
 
 When it comes to the destination of commuting, an average of 44.1% of residents commute within their CSDs in the Greater Vancouver Area. The City of Vancouver has the highest proportion (67.8%) of residents commuting within the CSD. The map below shows the proportions of people who transit to work within their CSDs, by CSD. We can see that CSDs immediately neighboring the city of Vancouver have the lowest proportions of people working within own CSDs, probably because people there tend to transit to the City to work. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/commut_within_csd.png" alt="Map: CSD commute destination">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/commute_within_csd.png" alt="Map: CSD commute destination">
 
