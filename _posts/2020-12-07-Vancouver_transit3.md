@@ -7,7 +7,7 @@ header:
 excerpt: "GIS, Python, transit"
 ---
 
-# Preprocessing
+# Removed extreme observations
 
 Now that we have tabular data of demographic characters, transit access and transit usage down to the DA level, I will pre-process the data so that it is ready to be put into machine learning algorithms. Firstly, columns with all NA data are removed (in fact there are two such columns). Then, I remove rows that have irregular, or extreme values for important variables, as shown in the following table:
 
@@ -24,3 +24,5 @@ Now that we have tabular data of demographic characters, transit access and tran
 The following map shows in brown color DAs that have been removed from our next steps of analyses. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/DA_removed.png" alt="Map: DA removed for analyses">
+
+#
