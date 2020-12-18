@@ -3,7 +3,7 @@ title: "Demographic Characters and Access to Public Transit in Greater Vancouver
 date: 2020-12-07
 tags: [GIS, python, transit]
 header:
-   image: "/images/shap.png"
+   image: "/images/Vancouver_photo2.jpg"
 excerpt: "GIS, Python, transit"
 ---
 
@@ -72,11 +72,69 @@ I gave also removed variables that sit on the causal line from access to transit
 
 In total, 572 new proportional variables have been created, and 76 confounding variables have been excluded. 
 
-# Preliminary analyses
+# Create train and test splits
 
-Before stepping into modeling, I did some quick sanity check on the correlation between access to, and public usage of transit in GVA. The two plots below show that their relationships seem to be positive, which is expected. 
+There are 2544 observations in the train split and 636 observations in the test set. 
+
+## Preliminary analyses
+
+Before stepping into modeling, I did some quick sanity check on the correlation between access to, and public usage of transit in GVA. The two plots below show that their relationships seem to be positive, which is expected. In the 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/service_PC_prop_public.png" alt="Density plot: service per capita and public transit proportion">
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/stop_PC_prop_public.png" alt="Density plot: stops per capita and public transit proportion">
 
+# Modeling
+
+## Model selection and hyperparameter tuning
+
+I selected three models, namely (1) dummy regression, (2) LASSO, and (3) Random Forest regression. 
+
+ - Dummy regression
+
+ - LASSO regression
+ 
+ I tuned the `alpha` hyperparameter in the model using grid search. As shown in the table below, an `alpha` value of 0.0001 turns out to be the best. 
+ 
+| Validation score rank | Mean validation R-squared | Alpha hyperparameter | Mean Fit Time |
+|-----------------------|---------------------------|----------------------|---------------|
+| 1                     | 0.680                     | 1.00E-04             | 13.815        |
+| 2                     | 0.651                     | 1.00E-03             | 19.746        |
+| 3                     | 0.627                     | 1.00E-05             | 14.588        |
+| 4                     | 0.518                     | 1.00E-02             | 21.070        |
+| 5                     | 0.354                     | 1.00E-01             | 14.889        |
+| 6                     | 0.255                     | 1.00E+00             | 2.017         |
+| 7                     | 0.113                     | 1.00E+01             | 1.835         |
+| 8                     | -0.001                    | 1.00E+02             | 1.322         |
+| 9                     | -0.001                    | 1.00E+03             | 1.279         |
+| 9                     | -0.001                    | 1.00E+04             | 1.002         |
+ 
+ - Random Forest model
+ 
+ I tuned `max_depth`, `max_features`, `min_samples_leaf`, `min_samples_split`, and `n_estimators` hyperparameters using randomized search. The table below shows the best combination of hyperparameters. 
+ 
+| Validation score rank | Mean validation R-squared  | Max_depth hyperparameter | Max_features hyperparameter | Min_samples_leaf hyperparameter | Min_samples_split hyperparameter | N_estimators hyperparameter | Mean Fit Time |
+|-----------------------|----------------------------|--------------------------|-----------------------------|---------------------------------|----------------------------------|-----------------------------|---------------|
+| 1                     | 0.6760                     | 100                      | auto                        | 2                               | 5                                | 2000                        | 1401.222      |
+| 2                     | 0.6759                     | 100                      | auto                        | 1                               | 5                                | 200                         | 142.685       |
+| 3                     | 0.6755                     | 40                       | auto                        | 1                               | 2                                | 200                         | 155.870       |
+| 4                     | 0.6751                     | 40                       | auto                        | 2                               | 10                               | 600                         | 336.548       |
+| 5                     | 0.6745                     | 100                      | auto                        | 2                               | 10                               | 2000                        | 1302.495      |
+| 6                     | 0.6720                     | 40                       | auto                        | 1                               | 5                                | 200                         | 144.661       |
+| 7                     | 0.6657                     |                          | sqrt                        | 2                               | 2                                | 200                         | 5.166         |
+| 8                     | 0.6642                     | 100                      | sqrt                        | 1                               | 10                               | 2000                        | 45.181        |
+| 9                     | 0.6639                     | 100                      | sqrt                        | 4                               | 2                                | 2000                        | 42.367        |
+| 10                    | 0.6630                     | 10                       | sqrt                        | 2                               | 5                                | 600                         | 12.829        |
+
+## Model evaluation
+
+After hyperparameter tuning, I compared the performance, as measured by root mean squared error (RMSE), among the three models on the whole train split. Random forest regression seems to perform the best among the three models. 
+ 
+| Model                    | Train Split RMSE |
+|--------------------------|------------------|
+| Dummy Model              | 0.120            |
+| LASSO Regression         | 0.054            |
+| Random Forest Regression | 0.027            |
+
+I then fitted the best Random Forest model with the test split, and got a RMSE of about 0.070. 
+ 
