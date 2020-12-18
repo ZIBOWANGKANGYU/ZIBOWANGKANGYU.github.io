@@ -9,13 +9,13 @@ excerpt: "GIS, Python, transit"
 
 For the Jupyter Notebook with full analyses, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/book/Model_analysis.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
 
-# Where should transit infrastructure development goes in the Greater Vancouver Area?
+# Where should transit infrastructure development go in the Greater Vancouver Area?
 
-In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify areas in the region where an increase in access to transit service leads to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to develop two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased all across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
+In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify places in the region where an increase in access to transit service leads to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to build two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
 
  - The downtown core: Yaletown and areas around the Waterfront
  
- - North Vancouver and West Vancouver: neighborhoods on both sides of the Trans-Canadian Highway
+ - North Vancouver and West Vancouver: neighborhoods close to the Trans-Canadian Highway
  
  - Richmond: areas on the north and south edges
  
@@ -25,7 +25,7 @@ In order to understand where Greater Vancouver Area's public transit agency shou
 
 # Model Analyses: feature importance
 
-Both LASSO and Random Forest models give easy access to measurements of global feature importances. For LASSO model, I use the magnificence of coefficients to roughly estimate each variable's importance. For Random Forest model, I use the impurity measurement of each variable's importance, and calculated SHAP (SHapley Additive exPlanations) values.
+Both LASSO and Random Forest models give easy access to measurements of global feature importances. For the LASSO model, I use the magnificence of coefficients to roughly estimate each variable's importance. For the Random Forest model, I use the impurity measurement of each variable's importance, and calculate SHAP (SHapley Additive exPlanations) values.
 
 In addition, the three types of input variables, namely `categorical_features`, `numeric_features`, and `proportion_features` are scaled differently in the preprocessing step. Therefore, I will review the important variables for all three categories separately.
 
@@ -33,7 +33,7 @@ In addition, the three types of input variables, namely `categorical_features`, 
 
 ### LASSO model
 
-The table below shows the five categorical features that mostly strongly predict proportion of transit use among residents. They are ADA or CCS areas.
+The table below shows the five categorical features that mostly strongly predict high proportion of transit use among residents. They are ADA or CCS areas.
 
 |     |         feature |   coeffs |
 |----:|----------------:|---------:|
@@ -50,11 +50,11 @@ As shown in the map above, areas in the city of Vancouver tend to have high prop
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_19_0.png" alt="Map: low transit use categorical LASSO">
 
-Somehow unexpectedly, areas that most strongly predict low public transit use are also in the downtown area. They are distributed along Thurlow Street. It is important they are also in the CCS which predicts high transit use. In other words, these areas may have lower transit use than their immediate neighbors, but not necessarily compared to other ares in GVA.
+Somehow unexpectedly, regions that most strongly predict low public transit use are also in the downtown area, distributed along Thurlow Street. They are also in the CCS which predicts high transit use. In other words, these areas may have lower transit use than their immediate neighbors, but not necessarily compared to other ares in GVA.
 
 ### Random Forest model
 
-The table below shows the five categorical features that mostly strongly impact proportion of transit use among residents. They are CSD or CCS areas. It is worth noting that we cannot know the direction of impact from these impurity measures.
+The table below shows the five categorical features that most strongly impact proportion of transit use among residents. They are CSD or CCS areas. We cannot know the direction of impact from these impurity measures.
 
 |     |         feature | impurity_importance |
 |----:|----------------:|--------------------:|
@@ -66,13 +66,13 @@ The table below shows the five categorical features that mostly strongly impact 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_23_0.png" alt="Map: transit use categorical rf">
 
-If we can take a guess, however, areas in the city of Vancouver probably tend to have higher rates of transit use. By contrast, The east part of Langley city and Aldergrove probably have low transit use. We will know more details about each feature's impact later using SHAP.
+If we can make a guess, however, areas in the city of Vancouver probably tend to have higher rates of transit use. By contrast, The east part of Langley city and Aldergrove probably have low transit use. We will know more details about each feature's impact later using SHAP.
 
 ## Numeric features
 
 ### LASSO model
 
-index     |feature | coeffs      | explanation                                                                                                                                                                                                                                                           |
+|         |feature | coeffs      | explanation                                                                                                                                                                                                                                                           |
 |--------:|-------:|------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |     620 |  vn289 |    0.022032 |                                                                                                                 Immigration - Total Sex / Total - Age at immigration for the immigrant population in private households - 25% sample data / 25 to 44 years |
 |     711 |  vn380 |    0.021731 |                                                                                                                                                                                                                    Labour - Total Sex / Participation rate |
@@ -80,9 +80,9 @@ index     |feature | coeffs      | explanation                                  
 |     682 |  vn351 |    0.016852 |                                                                                                    Ethnic Origin - Total Sex / Total - Ethnic origin for the population in private households - 25% sample data / European origins / British Isles origins |
 |     439 |  vn108 |    0.016713 | Housing - Total Sex / Total -  Owner and tenant households with household total income greater than zero, in non-farm, non-reserve private dwellings by shelter-cost-to-income ratio - 25% sample data / Spending less than 30% of income on shelter costs |
 
-As shown in the table above, important numeric factors that indicate strong transit use include:
+As shown in the table above, important numeric factors that indicate high transit use include:
 
-(1) Large of immigrant population who moved to Canada when they were 25 to 44 years old,
+(1) Large number of immigrant population who moved to Canada when they were 25 to 44 years old,
 
 (2) High labor participation rate (number of people working as a percentage of total population),
 
@@ -112,7 +112,7 @@ As shown in the table above, the following numeric features most strongly predic
 
 (5) High average housing cost for rented dwellings.
 
-We would also be interested in knowing where the two variables that we are interested in rank among the numeric features. It turns out that among 462 numeric features, number of services per capita ranks 20, coefficient is 0.0060. Number of stops per capita has zero coefficient.
+We are also interested in knowing where the two transit access variables are ranked among the numeric features. It turns out that among 462 numeric features, number of services per capita ranks 20, coefficient is 0.0060. Number of stops per capita has zero coefficient.
 
 ### Random Forest model
 
@@ -124,9 +124,9 @@ We would also be interested in knowing where the two variables that we are inter
 | 352 |            vn21 |            0.004274 |                                                                                                                                                                   Dwelling characteristics / Total - Occupied private dwellings by structural type of dwelling - 100% data / Single-detached house |
 | 415 |            vn84 |            0.003868 |                                                                                                                                                                              Housing - Total Sex / Total - Occupied private dwellings by period of construction - 25% sample data / 1960 or before |
 
-The table above show the important numeric features in our Random Forest model. Population density turns out to be the most important feature. Also, much to our pleasure, number of services per capita, the variable that we are interested in, ranks the second in terms of importance.
+The table above show the important numeric features in our Random Forest model. Population density turns out to be the most important feature. Also, much to our pleasant surprise, number of services per capita, the variable that we are interested in, ranks the second in terms of importance.
 
-Other important features include number of government transfer recipients, high number of single-detached house, and very old house dwellings.
+Other important features include high amounts of government transfer recipients, high number of single-detached house, and very old house dwellings.
 
 ## Proportional features
 
@@ -148,7 +148,7 @@ As shown in the table above, strong predictors for high transit use, among propo
 
 (3) High proportion of people with East and Southeast Asian ethnic origins,
 
-(4) High proportion of people commuting to a different CSD but different CD for work,
+(4) High proportion of people commuting to a different CSD but the same CD for work,
 
 (5) High proportion of households that have couples with children.
 
@@ -182,7 +182,7 @@ By contrast, strong predictors for low transit use, among proportion variables, 
 |  958 | vn207_ultimate_vn203 |            0.030017 | Denominator is Other language spoken regularly at home - Both sexes / Total - Other language(s) spoken regularly at home for the total population excluding institutional residents - 100% data ; Both sexes; numerator is Other language spoken regularly at home - Both sexes / Total - Other language(s) spoken regularly at home for the total population excluding institutional residents - 100% data ; Both sexes / Non-official language ; Both sexes. |
 |  955 | vn204_ultimate_vn203 |            0.028454 |                  Denominator is Other language spoken regularly at home - Both sexes / Total - Other language(s) spoken regularly at home for the total population excluding institutional residents - 100% data ; Both sexes; numerator is Other language spoken regularly at home - Both sexes / Total - Other language(s) spoken regularly at home for the total population excluding institutional residents - 100% data ; Both sexes / None ; Both sexes. |
 
-In our random forest model, marital status of residents have the most impact on use of public transit. Other important proportion features include:
+In our Random Forest model, marital status of residents have the most impact on use of public transit. Other important proportional features include:
 
 (1) Number of immigrants from East and Southeast Asia as a proportion of all immigrants,
 
@@ -193,43 +193,43 @@ In our random forest model, marital status of residents have the most impact on 
 ## SHAP analyses on Random Forest model
 
 Here, we use the SHapley Additive exPlanations (SHAP) tool to further understand the effects of features in our Random Forest model.
-The variable that we are most interested in, of course, is number of services per capita in the neighborhood area NBA_services_PC. Two takeaways are worth of mentioning here:
+The variable that we are most interested in, of course, is number of services per capita in the neighborhood area `NBA_services_PC`. Two takeaways are worth of mentioning here:
 
-(1) The relationship between NBA_services_PC and transit use is positive, with the only exception of very large NBA_services_PC values.
+(1) The relationship between `NBA_services_PC` and transit use is positive, with the only exception of very large `NBA_services_PC` values.
 
-(2) Among other variables, vn34_ultimate_vn33 (proporion of married or common-law couples among all residents) has highest frequency of interaction with NBA_services_PC. The positive relationship between NBA_services_PC and transit use seems to be more positive for areas with high proportions of married people.
+(2) Among other variables, `vn34_ultimate_vn33` (proportion of married or common-law couples among all residents) has highest frequency of interaction with `NBA_services_PC`. The positive relationship between `NBA_services_PC` and transit use seems to be more positive for areas with high proportions of married people.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_58_0.png" alt="Plot: Shap dependency service pc">
 
-Another variable that we will be interested in is NBA_stops_PC, the number of stops in the neighhood area. As we can see in the following plot, it also has a positive, albeit weaker relationship with transit use. Also interestingly, there seems to be a strong case of interaction between NBA_stops_PC and vn142_ultimate_vn131, which is the proportion of people who speak an non-official language as their mother tougue. For DAs with more presence of such population, the relationship between transit stops and public transportation use seems stronger.
+Another variable that we are interested in is `NBA_stops_PC`, the number of stops in the neighborhood area. As we can see in the following plot, it also has a positive, albeit weaker relationship with transit use. Also interestingly, there seems to be a strong interaction between `NBA_stops_PC` and `vn142_ultimate_vn131`, which is the proportion of people who speak an non-official language as their mother tongue. For DAs with more presence of such population, the relationship between transit stops and public transportation use seems stronger.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_62_0.png" alt="Plot: Shap dependency stops pc">
 
-To gain an understanding of key features that impact transit use at the DA level, I have made the charts below.
+To gain an understanding of all key features that impact transit use at the DA level, please see the charts below.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_67_0.png" alt="Plot: Shap summary">
 
 ## Summary
 
-We have not figured out where GVA's public transportation agency should prioritize in terms of service and infrastructure development yet. However, the analyses above provide valuable information abour the relationship between demographic characters and transit use in GVA, especially the role of access to public transportation services and stops.
+We have not figured out where GVA's public transportation agency should prioritize in terms of service and infrastructure development yet. However, the analyses above provide valuable information about the relationship between demographic characters and transit use in GVA, especially the role of access to public transportation services and stops.
 
 Geographically speaking, areas in and around the downtown core tend have higher public transit use, something hardly surprising given our prior analyses on the spatial distribution of transit services in the area. However, variations within the downtown core should not be overlooked.
 
-In addition to geographical location, factors that impact transit use are diverse, distributed across the variables covered by the census. DA level variables in ethnicity, family structure, housing, immigration, labor and language all make to the top of importance.
+In addition to geographical location, factors that impact transit use are diverse, distributed across demographic aspects covered by the census. DA level variables in ethnicity, family structure, housing, immigration, labor and language all make to the top of importance.
 
-Access to transit does seem to affect people's transit use, with all other variables above taken into consideration. Both of our models agree that number of services percapita in a DA's neighborhood area is a more important feature than the number of stops per capita. Our LASSO model does not even select the number of stops per capita as a variable. This seems to suggest that the authority should pour more of their resources into strengthening transit services at existing locations, instead of setting up new stops.
+Access to transit does seem to affect people's transit use, with all other variables above taken into consideration. Both our models agree that number of services per capita in a DA's neighborhood area is a more important feature than the number of stops per capita. Our LASSO model does not even give the number of stops per capita a non-zero coefficient. This seems to suggest that the authority should pour more of their resources into strengthening transit services at existing locations, instead of setting up new stops.
 
-Exactly how important are transit services and stops? In fact, the two models that we select diverge to a certain degree. What we can be confident about for now, however, is that number of transit services per capita is among the 5% most important numeric features, and is related to transit use positively.
+Exactly how important are transit services and stops? In fact, the two models diverge to a certain degree. What we can be confident about for now, however, is that number of transit services per capita is among the 5% most important numeric features, and is related to transit use positively.
 
 # Decision Recommendations
 
-How should out analyses inform decision makers? In the last section of this project, I will bring back the whole dataset and identify areas that GVA's transportation agency should pour its resources to. I will identify such areas in two ways:
+How should our analyses inform decision makers? In the last section of this project, I will bring back the whole dataset and identify areas that GVA's transportation agency should pour its resources to. I will identify such areas in two ways:
 
-(1) I will create a hypothetical dataset (X_1) where each DA's NBA_services_PC increases by a fixed amount (10% of average current NBA_services_PC across all DAs in GVA, or about 1.2). I will then identify DAs where transit use rate increases the most, measured by percentage point increase.
+(1) I will create a hypothetical dataset (X_1) where each DA's `NBA_services_PC` increases by a fixed percentage point (10% of average current NBA_services_PC across all DAs in GVA, or about 1.2). I will then identify DAs where transit use rate increases the most, measured by percentage point increase.
 
-(2) I will create a hypothetical dataset (X_2) where each DA's NBA_services_PC increases by a fixed percentage (10%). I will then identify as a percentage of current transit use rate increases the most, measured by percentage increase.
+(2) I will create a hypothetical dataset (X_2) where each DA's `NBA_services_PC` increases by a fixed percentage (10%). I will then identify as a percentage of current transit use rate increases the most, measured by percentage increase.
 
-## Scenario 1: services per capita increases by a fixed amount (1.2)
+## Scenario 1: services per capita increases by a fixed amount
 
 The following two maps identify DAs with top 10% percentage point increase in transit use if number of transit services per person increases by about 1.2 in the neighborhood area.
 
@@ -237,7 +237,7 @@ The following two maps identify DAs with top 10% percentage point increase in tr
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_76_0.png" alt="Map: Random Forest Scenario 1">
 
-Are our predictions of increase in transit use similar between the two models. I have calculated the Pearson correlation coefficient between two sets of predictions, which stand at 0.768. This result is satisfactory.
+Are our predictions of increase in transit use similar between the two models? I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.768. This result is satisfactory.
 
 ## Scenario 2: services per capita increases by a fixed percent (10%)
 
