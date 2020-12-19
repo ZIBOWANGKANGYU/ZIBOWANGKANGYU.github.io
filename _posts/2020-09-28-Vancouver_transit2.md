@@ -8,21 +8,21 @@ excerpt: "GIS, Python, transit"
 ---
 # Access to public transit
 
-GTFS is a great data source to gauge access to public transit from. This analyses defines access to public transit in the following two ways:
+GTFS is a great data source to gauge access to public transit from. This analysis defines access to public transit in the following two ways:
 
 (1) Number of transit services available in the neighborhood area of a DA, divided by the total population of the DA.
 
 (2) Number of transit stops in the the neighborhood area of a DA, divided by the total population of the DA.
 
-The neighborhood area of a DA is defined as all points within the geographical boundary of the DA, along with a buffer zone that includes all points around the DA where the straight line distance between that point, and some point in the DA, is less than 500 meters.
+The neighborhood area of a DA is defined as all points within the geographical boundary of the DA, along with a buffer zone that includes all points around the DA where the straight line distance between that point, and at least one point in the DA, is less than 500 meters.
 
 The following map shows the DAs with top 10% of transit service per capita. Such area are concentrated in the eastern part of the downtown core, and the ares to its immediate east. Kitsland also sees relatively high access to transit service. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/NBA_services_PC_10pc.png" alt="Map: Top NBA Services PC">
 
-The following maps shows DAs with top 10% transit stops per capita. The distribution of such areas is more widespread across GVA, extending to nearby cities including Surrey, Richmond, Burnaby, Coquitlam and Maple Ridge. 
+The following map shows DAs with top 10% transit stops per capita. The distribution of such areas is more widespread across GVA, extending to nearby cities including Surrey, Richmond, Burnaby, Coquitlam and Maple Ridge. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/NBA_services_PC_10pc.png" alt="Map: Top NBA Stops PC">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/NBA_stops_PC_10pc.png" alt="Map: Top NBA Stops PC">
 
 # Usage of public transit
 
@@ -35,7 +35,7 @@ On the other side of the equation is residents' usage of public transit. Fortuna
 - people who cycle to work
 - people who commute to work with other methods
 
-As shown in the following chart, for most DAs, the majority of peole commute as drivers of private vehicles. However, there are a substantial number of DAs where around (or a little bit less than) half residents commute use public transit. For almost all DAs, only a tiny proportion of commuters bike, walk or use private vehicles as a passenger.
+As shown in the following chart, for most DAs, the majority of peole commute as drivers of private vehicles. However, there is a substantial number of DAs where around (or a little bit less than) half residents commute use public transit. For almost all DAs, only a tiny proportion of commuters bike, walk or use private vehicles as a passenger.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_mode.png" alt="Density Plot: DA mode">
 

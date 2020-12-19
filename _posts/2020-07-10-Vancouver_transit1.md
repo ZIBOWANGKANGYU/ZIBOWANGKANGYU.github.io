@@ -24,7 +24,7 @@ According to the [official website](https://gtfs.org/gtfs-background) of GTFS, i
 
 GTFS provides two types of public transit information, namely `Static` and `Realtime`. `Static` data, generally speaking, provides information on how the transit system are **plannd** to run. By contrast, `realtime` data gives information about how the transit system is **actually running** in real time. This project only uses the `static` part of GTFS data.
 
-There are various tables in the `static` part of GTFS data. I mainly used five of them: `routes`, `shapes`, `stops`, `stop_times` and `trips`.
+There are various tables in `static` data. I mainly use five of them: `routes`, `shapes`, `stops`, `stop_times` and `trips`.
 
 - Routes
 
@@ -32,7 +32,7 @@ A route is a group of trips that are displayed to riders as a single service. Th
 
 - Trips
 
-A trip is a sequence of two or more stops that occur during a specific time period, adn one route usually has multiple trips. 122746 trips are identified in Vancouver: among them, route Expo Line has 4778 trips, which is the most among all routes, and route Dunbar/Downtown has 13 trips, which is the least among all routes.
+A trip is a sequence of two or more stops that occur during a specific time period, and one route usually has multiple trips. 122746 trips are identified in Vancouver: among them, route Expo Line has 4778 trips, which is the most among all routes, and route Dunbar/Downtown has 13 trips, which is the least among all routes.
 
 As shown in the histogram below, each route has in average about 200 trips. Routes with more than 1,000 trips are rare.
 
@@ -42,13 +42,13 @@ As shown in the histogram below, each route has in average about 200 trips. Rout
 
 A trip is geographically linked with a shape, which describes the path that a vehicle travels along a route alignment. According to GTFS, stops on a trip should "lie within a small distance of the shape for that trip."
 
-From the shape table, we can get more information on the length of each trip. For Vancouver, the median trip distance is 12.00 km. Route West Coast Express is 67.9 kms long, which is the longest route. This route streches from downtown Vancouver to Mission, a town far up the Fraser River. Its map is presented below.
+From the shape table, we can get more information about the length of each trip. For Vancouver, the median trip distance is 12.00 km. Route West Coast Express is 67.9 kms long, which is the longest route. This route streches from downtown Vancouver to Mission, a town far up the Fraser River. Its map is presented below.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/lines_max.png" alt="Map: longest route">
 
 - Stops
 
-GTFS defines stops as places where vehicles pick up or drop off riders. Vancouver's public transoirtation has 8919 stops identified.
+GTFS defines stops as places where vehicles pick up or drop off riders. Vancouver's public transportation has 8919 stops identified.
 
 The following maps show all the stops, and the ten busiest among them. Most of the busiest stops are in the downtown area. 
 
@@ -58,7 +58,7 @@ The following maps show all the stops, and the ten busiest among them. Most of t
 
 - Stop-times
 
-The stop-times table gives detailed information on times that a vehicle arrives at and departs from stops for each trip. With this data, we can gain many important insights into the the operation of stops in the transit system. 
+The stop-times table gives detailed information about time when a vehicle arrives at and departs from stops for each trip. With this data, we can gain many important insights into the the operation of stops in the transit system. 
 
 How busy are the public transit stops? The map below colors the stops by the number of trips they serve have per day. The busier stops are in the City of Vancouver, as well as along major roads. 
 
@@ -66,7 +66,7 @@ How busy are the public transit stops? The map below colors the stops by the num
 
 ## 2016 Census Data
 
-[Canadian census](https://www12.statcan.gc.ca/census-recensement/index-eng.cfm) conducted in 2016 provides important demographic and socio-economic information about neighborhoods in the Greater Vancouver Area. Greater Vancouver Area (GVA) is one of the 293 Census Divisions (CDs) in Canada, and we confine out analyses there.
+The [Canadian census](https://www12.statcan.gc.ca/census-recensement/index-eng.cfm) conducted in 2016 provides important demographic and socio-economic information about neighborhoods in the Greater Vancouver Area. Greater Vancouver Area (GVA) is one of the 293 Census Divisions (CDs) in Canada, and we confine out analyses there.
 
 The amount of data available from the census is enormous, and for this project, it is essential to understand how data is reported in a hierarchy of geographies. A useful graphical illustration can be found [here](https://www12.statcan.gc.ca/census-recensement/2016/ref/dict/figures/f1_1-eng.cfm). In short, this study utilizes data down to the Dissemination Area (DA) level, which, according to Statistics Canada:
 
@@ -94,7 +94,7 @@ The following table summarizes the basic demographical and geographical characte
 
 - Population
 
-In average, each DA has 714 persons as of 2016 census. The following maps shows the population counts across DAs. DAs with most population are not concentrated in the downtown area. Instead, they are scattered in Surrey and Coquitlam.
+In average, each DA has 714 persons as of 2016 census. The following map shows the population counts across DAs. DAs with most population are not concentrated in the downtown area. Instead, they are scattered in Surrey and Coquitlam.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/pop2016.png" alt="Map: Population counts by DA">
 
@@ -106,4 +106,4 @@ The following map shows the population density among DAs in GVA. The majority of
 
 # Conclusion
 
-From data gathered from the 2016 census and GTFS dataset, we can extract variables that interest us. As a policy question, the study intends to figure out as Vancouver's public transit authority distributes additional transportation capacities, decide where and when it should prioritize to maximize the usage of public transit across the metropolitan area. We will discuss the key variables in the next post. 
+From 2016 census and GTFS data, we can extract variables that interest us. As a policy question, the study intends to figure out as Vancouver's public transit authority distributes additional transportation capacities, where and when it should prioritize to maximize the usage of public transit across the metropolitan area. We will discuss the key variables in the next post. 

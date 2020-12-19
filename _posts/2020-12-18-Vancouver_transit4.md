@@ -9,9 +9,9 @@ excerpt: "GIS, Python, transit"
 
 For the Jupyter Notebook with full analyses, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/book/Model_analysis.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
 
-# Where should transit infrastructure development go in the Greater Vancouver Area?
+# Where should transit infrastructure development take place in the Greater Vancouver Area?
 
-In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify places in the region where an increase in access to transit service leads to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to build two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
+In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify places in the region where an increase in access to transit service will lead to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to build two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
 
  - The downtown core: Yaletown and areas around the Waterfront
  
@@ -23,7 +23,7 @@ In order to understand where Greater Vancouver Area's public transit agency shou
  
  - Surrey: areas in the southwest and northeast
 
-# Model Analyses: feature importance
+# Model analyses: feature importance
 
 Both LASSO and Random Forest models give easy access to measurements of global feature importances. For the LASSO model, I use the magnificence of coefficients to roughly estimate each variable's importance. For the Random Forest model, I use the impurity measurement of each variable's importance, and calculate SHAP (SHapley Additive exPlanations) values.
 
@@ -66,7 +66,7 @@ The table below shows the five categorical features that most strongly impact pr
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_23_0.png" alt="Map: transit use categorical rf">
 
-If we can make a guess, however, areas in the city of Vancouver probably tend to have higher rates of transit use. By contrast, The east part of Langley city and Aldergrove probably have low transit use. We will know more details about each feature's impact later using SHAP.
+If I can make a guess, however, areas in the city of Vancouver probably tend to have higher rates of transit use. By contrast, The east part of Langley city and Aldergrove probably have low transit use. We will know more details about each feature's impact later using SHAP.
 
 ## Numeric features
 
@@ -112,7 +112,7 @@ As shown in the table above, the following numeric features most strongly predic
 
 (5) High average housing cost for rented dwellings.
 
-We are also interested in knowing where the two transit access variables are ranked among the numeric features. It turns out that among 462 numeric features, number of services per capita ranks 20, coefficient is 0.0060. Number of stops per capita has zero coefficient.
+We are also interested in knowing where the two transit access variables are ranked among the numeric features. It turns out that among 462 numeric features, number of services per capita ranks 20, coefficient is 0.0060. However, the number of stops per capita has zero coefficient.
 
 ### Random Forest model
 
@@ -124,7 +124,7 @@ We are also interested in knowing where the two transit access variables are ran
 | 352 |            vn21 |            0.004274 |                                                                                                                                                                   Dwelling characteristics / Total - Occupied private dwellings by structural type of dwelling - 100% data / Single-detached house |
 | 415 |            vn84 |            0.003868 |                                                                                                                                                                              Housing - Total Sex / Total - Occupied private dwellings by period of construction - 25% sample data / 1960 or before |
 
-The table above show the important numeric features in our Random Forest model. Population density turns out to be the most important feature. Also, much to our pleasant surprise, number of services per capita, the variable that we are interested in, ranks the second in terms of importance.
+The table above show the important numeric features in our Random Forest model. Population density turns out to be the most important one. Also, much to our pleasant surprise, number of services per capita, the variable that we are interested in, ranks the second.
 
 Other important features include high amounts of government transfer recipients, high number of single-detached house, and very old house dwellings.
 
@@ -148,7 +148,7 @@ As shown in the table above, strong predictors for high transit use, among propo
 
 (3) High proportion of people with East and Southeast Asian ethnic origins,
 
-(4) High proportion of people commuting to a different CSD but the same CD for work,
+(4) High proportion of people commuting to a different CSD but the same CD for work, and
 
 (5) High proportion of households that have couples with children.
 
@@ -168,7 +168,7 @@ By contrast, strong predictors for low transit use, among proportion variables, 
 
 (3) High number of immigrants who are born in India, as a proportion of all immigrants born in Asia,
 
-(4) High proportion of tenent households spending 30% or more of its income on shelter costs, and
+(4) High proportion of tenant households spending 30% or more of its income on shelter costs, and
 
 (5) High number of internal migrants as a proportion of all migrants.
 
@@ -197,7 +197,7 @@ The variable that we are most interested in, of course, is number of services pe
 
 (1) The relationship between `NBA_services_PC` and transit use is positive, with the only exception of very large `NBA_services_PC` values.
 
-(2) Among other variables, `vn34_ultimate_vn33` (proportion of married or common-law couples among all residents) has highest frequency of interaction with `NBA_services_PC`. The positive relationship between `NBA_services_PC` and transit use seems to be more positive for areas with high proportions of married people.
+(2) Among other variables, `vn34_ultimate_vn33` (proportion of married or common-law couples among all residents) has highest frequency of interaction with `NBA_services_PC`. The relationship between `NBA_services_PC` and transit use seems to be more positive for areas with high proportions of married people.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_58_0.png" alt="Plot: Shap dependency service pc">
 
@@ -215,19 +215,19 @@ We have not figured out where GVA's public transportation agency should prioriti
 
 Geographically speaking, areas in and around the downtown core tend have higher public transit use, something hardly surprising given our prior analyses on the spatial distribution of transit services in the area. However, variations within the downtown core should not be overlooked.
 
-In addition to geographical location, factors that impact transit use are diverse, distributed across demographic aspects covered by the census. DA level variables in ethnicity, family structure, housing, immigration, labor and language all make to the top of importance.
+In addition to geographical location, factors that impact transit use are diverse, distributed across most demographic aspects covered by the census. DA level variables in ethnicity, family structure, housing, immigration, labor and language all make to the top of importance.
 
 Access to transit does seem to affect people's transit use, with all other variables above taken into consideration. Both our models agree that number of services per capita in a DA's neighborhood area is a more important feature than the number of stops per capita. Our LASSO model does not even give the number of stops per capita a non-zero coefficient. This seems to suggest that the authority should pour more of their resources into strengthening transit services at existing locations, instead of setting up new stops.
 
 Exactly how important are transit services and stops? In fact, the two models diverge to a certain degree. What we can be confident about for now, however, is that number of transit services per capita is among the 5% most important numeric features, and is related to transit use positively.
 
-# Decision Recommendations
+# Decision recommendations
 
 How should our analyses inform decision makers? In the last section of this project, I will bring back the whole dataset and identify areas that GVA's transportation agency should pour its resources to. I will identify such areas in two ways:
 
-(1) I will create a hypothetical dataset (X_1) where each DA's `NBA_services_PC` increases by a fixed percentage point (10% of average current NBA_services_PC across all DAs in GVA, or about 1.2). I will then identify DAs where transit use rate increases the most, measured by percentage point increase.
+(1) I will create a hypothetical dataset (`X_1`) where each DA's `NBA_services_PC` increases by a fixed percentage point (10% of average current NBA_services_PC across all DAs in GVA, or about 1.2 percentage points). I will then identify DAs where transit use rate increases the most, measured by percentage point increase.
 
-(2) I will create a hypothetical dataset (X_2) where each DA's `NBA_services_PC` increases by a fixed percentage (10%). I will then identify as a percentage of current transit use rate increases the most, measured by percentage increase.
+(2) I will create a hypothetical dataset (`X_2`) where each DA's `NBA_services_PC` increases by a fixed percentage (10%). I will then identify as a percentage of current transit use rate increases the most, measured by percentage increase.
 
 ## Scenario 1: services per capita increases by a fixed amount
 
@@ -247,7 +247,9 @@ The following two maps identify DAs with top 10% percentage point increase in tr
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_82_0.png" alt="Map: Random Forest Scenario 2">
 
-The two models' predictions, under scenario 2, are also quite similar. I have calculated the Pearson correlation coefficient between two sets of predictions, which stand at 0.767.
+The two models' predictions, under scenario 2, are also quite similar. I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.767.
 
-## Summary 
+## Magnificence of impact
+
+Exactly how much increase in public transit use can we expect if the transportation authority does increase transit access in the key areas identified, in the aforesaid two scenarios? 
 
