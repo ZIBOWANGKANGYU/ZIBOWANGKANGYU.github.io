@@ -233,9 +233,9 @@ How should our analyses inform decision makers? In the last section of this proj
 
 The following two maps identify DAs with top 10% percentage point increase in transit use if number of transit services per person increases by about 1.2 in the neighborhood area.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_75_0.png" alt="Map: LASSO Scenario 1">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_74_0.png" alt="Map: LASSO Scenario 1">
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_76_0.png" alt="Map: Random Forest Scenario 1">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_75_0.png" alt="Map: Random Forest Scenario 1">
 
 Are our predictions of increase in transit use similar between the two models? I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.768. This result is satisfactory.
 
@@ -243,9 +243,9 @@ Are our predictions of increase in transit use similar between the two models? I
 
 The following two maps identify DAs with top 10% percentage point increase in transit use if number of transit services per person increases by 10 percent of the current value, in the neighborhood area.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_81_0.png" alt="Map: LASSO Scenario 2">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_80_0.png" alt="Map: LASSO Scenario 2">
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_82_0.png" alt="Map: Random Forest Scenario 2">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_81_0.png" alt="Map: Random Forest Scenario 2">
 
 The two models' predictions, under scenario 2, are also quite similar. I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.767.
 

@@ -9,7 +9,7 @@ excerpt: "GIS, Python, transit"
 
 # Remove extreme observations
 
-Now that we have tabular data of demographic characters, transit access and transit usage down to the DA level, I will pre-process the data so that it is ready to be put into machine learning algorithms. Firstly, columns with all NA data are removed (in fact there are two such columns). Then, I remove rows that have irregular, or extreme values for important variables, as shown in the following table:
+Now that we have tabular data of demographic characters, transit access and transit usage down to the DA level, I will pre-process the data so that it is ready to be put into machine learning algorithms. Firstly, columns with all NA data are removed (in fact there are two such columns). Then, I will remove rows that have irregular, or extreme values for important variables, as shown in the following table:
 
 | Removal Criteria                                                    | Number of DAs removed     |
 |---------------------------------------------------------------------|---------------------------|
@@ -21,13 +21,13 @@ Now that we have tabular data of demographic characters, transit access and tran
 |DAs without transit service or stops in the neighborhood area        |                        49 |
 |DAs whose proportions of residents using transit are invalid (NAs)   |                         2 |
 
-The following map shows in brown color DAs that have been removed from our next steps of analyses. 
+The following map shows in brown DAs that have been removed from our next steps of analyses. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/DA_removed.png" alt="Map: DA removed for analyses">
 
 # Feature engineering
 
-Most explanatory variables of this study come from the 2016 census, except for two, namely the number of transit services in the neighborhood area per person, and the number of transit stops in the neighborhood area per person, which are from the GTFS Data. I have also calculated some proportional relationships between census variables and added them to our analyses, and removed some variables that can confound our analyses. 
+Most explanatory variables of this study come from the 2016 census, except for two, namely the number of transit services in the neighborhood area per person, and the number of transit stops in the neighborhood area per person, which are from the GTFS Data. I have also calculated some proportional relationships between census variables and added them to our analyses, and removed some confounding variables. 
 
 ## Create proportional variables
 
@@ -64,7 +64,7 @@ The following chart also explains types of numeric variables.
 
 ## Remove confounding variables
 
-I gave also removed variables that sit on the causal line from access to transit to proportion of transit use. Such variables, theoretically, are impacted by the access to public transportation, and can in turn impact the use of public transportation. Confounding variables include:
+I have also removed variables that sit on the causal chain from access to transit to proportion of transit use. Such variables, theoretically, are impacted by the access to public transportation, and can in turn impact the use of public transportation. Confounding variables include:
 
  - Mode of Commuting
  - Duration of Commuting 
@@ -78,7 +78,7 @@ There are 2544 observations in the train split and 636 observations in the test 
 
 ## Preliminary analyses
 
-Before stepping into modeling, I did some quick sanity check on the correlation between access to, and public usage of transit in GVA. The two plots below show that their relationships seem to be positive, which is expected. In the 
+Before stepping into modeling, I did some quick sanity check on the correlation between access to, and public usage of, transit in GVA. The two plots below show that their relationships seem to be positive, which is expected. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/service_PC_prop_public.png" alt="Density plot: service per capita and public transit proportion">
 
@@ -91,6 +91,8 @@ Before stepping into modeling, I did some quick sanity check on the correlation 
 I selected three models, namely (1) dummy regression, (2) LASSO, and (3) Random Forest regression. 
 
  - Dummy regression
+
+The dummy regression model has both training and testing R-squared close to zero, which is expected. 
 
  - LASSO regression
  
