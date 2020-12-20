@@ -3,11 +3,13 @@ title: "Demographic Characters and Access to Public Transit in Greater Vancouver
 date: 2020-12-18
 tags: [GIS, python, transit]
 header:
-   image: "/images/Vancouver_photo3.jpg"
+   image: "/images/Vancouver_photo3.png"
 excerpt: "GIS, Python, transit"
 ---
 
 For the Jupyter Notebook with full analyses, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/book/Model_analysis.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
+
+Other posts in this series include [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/), [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/) and [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/). 
 
 # Where should transit infrastructure development take place in the Greater Vancouver Area?
 
@@ -248,8 +250,3 @@ The following two maps identify DAs with top 10% percentage point increase in tr
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_81_0.png" alt="Map: Random Forest Scenario 2">
 
 The two models' predictions, under scenario 2, are also quite similar. I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.767.
-
-## Magnificence of impact
-
-Exactly how much increase in public transit use can we expect if the transportation authority does increase transit access in the key areas identified, in the aforesaid two scenarios? 
-
