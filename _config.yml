@@ -19,7 +19,7 @@ locale                   : "en-US"
 title                    : "Mark Wang"
 title_separator          : "-"
 name                     : "Mark Wang's projects"
-description              : "Data scientist focused on NLP, sales and prediction, graduate from UC San Diego."
+description              : "Data science student at UBC with work experience in sales prediction, NLP and management consulting."
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -108,14 +108,14 @@ analytics:
 author:
   name             : "Mark Wang"
   avatar           : "/images/Mark_profile.png"
-  bio              : "Graduate student in data science. Projects include natural langugae processing, geospatial analyses and applied research."
+  bio              : "Master of Data Science student at University of British Columbia. Projects include natural language processing, geospatial analyses, time series and applied economics research."
   location         : "Washington, DC"
   email            :
   linkedin         : "kangyumarkwang"
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: kangyumarkwang@gmail.com
+      url: changguang@outlook.com
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"

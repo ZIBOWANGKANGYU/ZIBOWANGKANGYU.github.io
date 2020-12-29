@@ -6,4 +6,4 @@ header:
 ---
 
 Welcome to my page!
-I am master's student in International Economics with strong quantitative skills. I am fluent in R, Stata and ArcGIS.
+I am currently pursuing Master of Data Science degree at University of British Columbia. I am fluent in Python, R and ArcGIS.
