@@ -13,7 +13,7 @@ Other posts in this series include [data sources](https://zibowangkangyu.github.
 
 # Where should transit infrastructure development take place in the Greater Vancouver Area?
 
-In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify places in the region where an increase in access to transit service will lead to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to build two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
+In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify places in the region where the same increase in access to transit service will lead to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to build two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
 
  - The downtown core: Yaletown and areas around the Waterfront
  
@@ -27,7 +27,7 @@ In order to understand where Greater Vancouver Area's public transit agency shou
 
 # Model analyses: feature importance
 
-Both LASSO and Random Forest models give easy access to measurements of global feature importances. For the LASSO model, I use the magnificence of coefficients to roughly estimate each variable's importance. For the Random Forest model, I use the impurity measurement of each variable's importance, and calculate SHAP (SHapley Additive exPlanations) values.
+Both LASSO and Random Forest models give easy access to measurements of global feature importance. For the LASSO model, I use the magnificence of coefficients to roughly estimate each variable's importance. For the Random Forest model, I use the impurity measurement of each variable's importance, and calculate SHAP (SHapley Additive exPlanations) values.
 
 In addition, the three types of input variables, namely `categorical_features`, `numeric_features`, and `proportion_features` are scaled differently in the preprocessing step. Therefore, I will review the important variables for all three categories separately.
 
@@ -217,7 +217,7 @@ We have not figured out where GVA's public transportation agency should prioriti
 
 Geographically speaking, areas in and around the downtown core tend have higher public transit use, something hardly surprising given our prior analyses on the spatial distribution of transit services in the area. However, variations within the downtown core should not be overlooked.
 
-In addition to geographical location, factors that impact transit use are diverse, distributed across most demographic aspects covered by the census. DA level variables in ethnicity, family structure, housing, immigration, labor and language all make to the top of importance.
+In addition to geographical location, factors that impact transit use are diverse, seen across most demographic aspects covered by the census. DA level variables in ethnicity, family structure, housing, immigration, labor and language all make to the top of importance.
 
 Access to transit does seem to affect people's transit use, with all other variables above taken into consideration. Both our models agree that number of services per capita in a DA's neighborhood area is a more important feature than the number of stops per capita. Our LASSO model does not even give the number of stops per capita a non-zero coefficient. This seems to suggest that the authority should pour more of their resources into strengthening transit services at existing locations, instead of setting up new stops.
 

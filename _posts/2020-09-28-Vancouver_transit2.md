@@ -16,7 +16,7 @@ GTFS is a great data source to gauge access to public transit from. This analysi
 
 The neighborhood area of a DA is defined as all points within the geographical boundary of the DA, along with a buffer zone that includes all points around the DA where the straight line distance between that point, and at least one point in the DA, is less than 500 meters.
 
-The following map shows the DAs with top 10% of transit service per capita. Such area are concentrated in the eastern part of the downtown core, and the ares to its immediate east. Kitsland also sees relatively high access to transit service. 
+The following map shows the DAs with top 10% of transit service per capita. Such area are concentrated in the eastern part of the downtown core, and the areas to its immediate east. Kitsland also sees relatively high access to transit service. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/NBA_services_PC_10pc.png" alt="Map: Top NBA Services PC">
 
@@ -35,7 +35,7 @@ On the other side of the equation is residents' usage of public transit. Fortuna
 - people who cycle to work
 - people who commute to work with other methods
 
-As shown in the following chart, for most DAs, the majority of peole commute as drivers of private vehicles. However, there is a substantial number of DAs where around (or a little bit less than) half residents commute use public transit. For almost all DAs, only a tiny proportion of commuters bike, walk or use private vehicles as a passenger.
+As shown in the following chart, for most DAs, the majority of people commute as drivers of private vehicles. However, there is a substantial number of DAs where around (or a little bit less than) half residents commute use public transit. For almost all DAs, only a tiny proportion of commuters bike, walk or use private vehicles as a passenger.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_mode.png" alt="Density Plot: DA mode">
 
@@ -45,7 +45,7 @@ In average, in the Greater Vancouver Area, 20.4% of residents commute using publ
 
 # Transit duration and destination
 
-The census also tells us about people's transit destinations, and the average commuting time of different DAs. In the Greater Vancouver Area, the average medium commute duration across CSDs is about 30.2 minutes. As shown in the following map, people living in DAs in the west part of the metropolitan area spend relatively less time commuting, whereas people living in areas in the east, including Burnaby, Coquitlam and Surrey spend longer time in commute. 
+The census also tells us about people's transit destinations, and the average commuting time of different DAs. In the Greater Vancouver Area, the average medium commute duration across CSDs is about 30.2 minutes. As shown in the following map, people living in DAs in the west half of the metropolitan area spend relatively less time commuting, whereas people living in areas in the east, including Burnaby, Coquitlam and Surrey spend longer time in commute. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_commute_duration.png" alt="Map: DA commute duration">
 

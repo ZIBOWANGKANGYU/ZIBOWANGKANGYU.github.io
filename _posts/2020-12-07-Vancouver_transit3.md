@@ -9,7 +9,7 @@ excerpt: "GIS, Python, transit"
 
 # Remove extreme observations
 
-Now that we have tabular data of demographic characters, transit access and transit usage down to the DA level, I will pre-process the data so that it is ready to be put into machine learning algorithms. Firstly, columns with all NA data are removed (in fact there are two such columns). Then, I will remove rows that have irregular, or extreme values for important variables, as shown in the following table:
+Now that we have tabular data of demographic characters, transit access and transit usage down to the DA level, I will pre-process the data so that it is ready to be put into machine learning algorithms. Firstly, features with all NA data are removed (in fact there are two such features). Then, I will remove rows that have irregular, or extreme values for important variables, as shown in the following table:
 
 | Removal Criteria                                                    | Number of DAs removed     |
 |---------------------------------------------------------------------|---------------------------|
@@ -21,11 +21,11 @@ Now that we have tabular data of demographic characters, transit access and tran
 |DAs without transit service or stops in the neighborhood area        |                        49 |
 |DAs whose proportions of residents using transit are invalid (NAs)   |                         2 |
 
-The following map shows in brown DAs that have been removed from our next steps of analyses. 
+The following map shows in brown DAs that have been removed from our next steps of analysis.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/DA_removed.png" alt="Map: DA removed for analyses">
 
-# Feature engineering
+# Feature engineering of census data
 
 Most explanatory variables of this study come from the 2016 census, except for two, namely the number of transit services in the neighborhood area per person, and the number of transit stops in the neighborhood area per person, which are from the GTFS Data. I have also calculated some proportional relationships between census variables and added them to our analyses, and removed some confounding variables. 
 
@@ -58,7 +58,7 @@ Firstly, we will put them directly into our models.
 Secondly, we will calculate the proportion of each type (2.2.2) variable to the type (2.1) variable that it ultimately (but not immediately, by definition) belongs to.
 Thirdly, we will calculate the proportion of each type (2.2.2) variable to the type (2.2.1) or type (2.2.2) variable that it immediately belongs to.
 
-The following chart also explains types of numeric variables. 
+The following chart explains types of numeric variables.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/num_var_types.png" alt="Chart: types of numeric variables">
 
@@ -78,7 +78,7 @@ There are 2544 observations in the train split and 636 observations in the test 
 
 ## Preliminary analyses
 
-Before stepping into modeling, I did some quick sanity check on the correlation between access to, and public usage of, transit in GVA. The two plots below show that their relationships seem to be positive, which is expected. 
+Before stepping into modeling, I did some quick sanity check on the correlation between access to, and public usage of, transit across DAs in GVA. The two plots below show that their relationships seem to be positive, which is expected. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit3/plots/service_PC_prop_public.png" alt="Density plot: service per capita and public transit proportion">
 
@@ -139,4 +139,3 @@ After hyperparameter tuning, I compared the performance, as measured by root mea
 | Random Forest Regression | 0.027            |
 
 I then fitted the best Random Forest model with the test split, and got a RMSE of about 0.070. 
- 
