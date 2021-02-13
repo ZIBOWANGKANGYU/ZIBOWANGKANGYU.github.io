@@ -25,6 +25,10 @@ In order to understand where Greater Vancouver Area's public transit agency shou
  
  - Surrey: areas in the southwest and northeast
 
+# Model Diagnostics
+
+
+
 # Model analyses: feature importance
 
 Both LASSO and Random Forest models give easy access to measurements of global feature importance. For the LASSO model, I use the magnificence of coefficients to roughly estimate each variable's importance. For the Random Forest model, I use the impurity measurement of each variable's importance, and calculate SHAP (SHapley Additive exPlanations) values.
@@ -45,12 +49,12 @@ The table below shows the five categorical features that mostly strongly predict
 | 138 | ADAUID_59150107 | 0.053888 |
 | 114 | ADAUID_59150082 | 0.048754 |
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_16_0.png" alt="Map: high transit use categorical LASSO">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/LASSO_top_categorical.png" alt="Map: high transit use categorical LASSO">
 
 
 As shown in the map above, areas in the city of Vancouver tend to have high proportions of people using public transit.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_19_0.png" alt="Map: low transit use categorical LASSO">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/LASSO_bottom_categorical.png" alt="Map: low transit use categorical LASSO">
 
 Somehow unexpectedly, regions that most strongly predict low public transit use are also in the downtown area, distributed along Thurlow Street. They are also in the CCS which predicts high transit use. In other words, these areas may have lower transit use than their immediate neighbors, but not necessarily compared to other ares in GVA.
 
@@ -66,7 +70,7 @@ The table below shows the five categorical features that most strongly impact pr
 |   7 |  CCSUID_5915022 |            0.003664 |
 | 148 | ADAUID_59150117 |            0.001297 |
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_23_0.png" alt="Map: transit use categorical rf">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/rf_imp_categorical.png" alt="Map: transit use categorical rf">
 
 If I can make a guess, however, areas in the city of Vancouver probably tend to have higher rates of transit use. By contrast, The east part of Langley city and Aldergrove probably have low transit use. We will know more details about each feature's impact later using SHAP.
 
@@ -201,15 +205,15 @@ The variable that we are most interested in, of course, is number of services pe
 
 (2) Among other variables, `vn34_ultimate_vn33` (proportion of married or common-law couples among all residents) has highest frequency of interaction with `NBA_services_PC`. The relationship between `NBA_services_PC` and transit use seems to be more positive for areas with high proportions of married people.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_58_0.png" alt="Plot: Shap dependency service pc">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/SHAP_NBA_services.png" alt="Plot: Shap dependency service pc">
 
 Another variable that we are interested in is `NBA_stops_PC`, the number of stops in the neighborhood area. As we can see in the following plot, it also has a positive, albeit weaker relationship with transit use. Also interestingly, there seems to be a strong interaction between `NBA_stops_PC` and `vn142_ultimate_vn131`, which is the proportion of people who speak an non-official language as their mother tongue. For DAs with more presence of such population, the relationship between transit stops and public transportation use seems stronger.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_62_0.png" alt="Plot: Shap dependency stops pc">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/SHAP_NBA_stops.png" alt="Plot: Shap dependency stops pc">
 
 To gain an understanding of all key features that impact transit use at the DA level, please see the charts below.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_67_0.png" alt="Plot: Shap summary">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/SHAP_top_variables.png" alt="Plot: Shap summary">
 
 ## Summary
 
