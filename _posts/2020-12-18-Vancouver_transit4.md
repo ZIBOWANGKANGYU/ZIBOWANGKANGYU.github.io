@@ -27,7 +27,13 @@ In order to understand where Greater Vancouver Area's public transit agency shou
 
 # Model Diagnostics
 
+Before drawing conclusions from our models, we want to examine whether there is spatial auto-correlation of their prediction errors. We believe that the higher the spatial auto-correlations are, the more unexplained factors, which affect transit use and are spatially clustered, there will be. Therefore, we want to see less, and ideally no spatial auto-correlation.
 
+As shown in the maps below, the spatial-autocorrelation problem does not seem to be severe. Indeed, the Moran’s I is 0.05 for the LASSO model, and 0.18 for the random forest model. However, p-tests show that we do have spatial-autocorrelation problems, at confidence levels of 0.001. 
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/LASSO_error.png" alt="Map: residuals of LASSO">
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/rf_error.png" alt="Map: residuals of rf">
 
 # Model analyses: feature importance
 
