@@ -7,10 +7,6 @@ header:
 excerpt: "GIS, Python, transit"
 ---
 
-For the Jupyter Notebook with full analyses, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/Report.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
-
-Other posts in this series include [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/), [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/) and [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/). 
-
 ## Where should transit infrastructure development take place in the Greater Vancouver Area?
 
 In order to understand where Greater Vancouver Area's public transit agency should invest in infrastructure development, I try to identify places in the region where the same increase in access to transit service will lead to the most increase in transit use. Using the 2016 Canadian census data and the GTFS dataset, I am able to build two machine learning models: LASSO regression and Random Forest. After training our models with the real dataset, I tweaked the input data a little bit to simulate scenarios where access to public transit is marginally increased across the Greater Vancouver Area. It turns out the following areas will benefit the most, as measured by public transportation use: 
