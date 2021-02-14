@@ -21,4 +21,4 @@ The following chart shows percentage point increase of public transportation use
 
 The following map highlights priority areas if GVA wants to target 10% of its neighborhoods, and increase the number of public transit services by 10%. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_2_LASSO.png" alt="Map: LASSO Scenario 2">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit_4_summary/plots/X_2_LASSO.png" alt="Map: LASSO Scenario 2">
