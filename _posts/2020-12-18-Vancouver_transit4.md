@@ -233,30 +233,41 @@ Access to transit does seem to affect people's transit use, with all other varia
 
 Exactly how important are transit services and stops? In fact, the two models diverge to a certain degree. What we can be confident about for now, however, is that number of transit services per capita is among the 5% most important numeric features, and is related to transit use positively.
 
-# Decision recommendations
+# Policy recommendations
 
-How should our analyses inform decision makers? In the last section of this project, I will bring back the whole dataset and identify areas that GVA's transportation agency should pour its resources to. I will identify such areas in two ways:
+How should our analyses inform decision makers? In the last section of this project, I will bring back the whole dataset and identify areas that GVA's transportation agency should pour its resources to. Bearing in mind that the government's resources are limited and come from tax payers' money, we should assume that it can only increase access to transit for a limited number of neighborhoods. Therefore, the selected neighborhoods should be places where the same increase in transit access lead to the most **increase in proportion of people using transit**, which is defined as the following:
 
-(1) I will create a hypothetical dataset (`X_1`) where each DA's `NBA_services_PC` increases by a fixed percentage point (10% of average current NBA_services_PC across all DAs in GVA, or about 1.2 percentage points). I will then identify DAs where transit use rate increases the most, measured by percentage point increase.
+increase in proportion of people using transit = proportion of people using transit as predicted by the model, after increase in transit access - current proportion of people using transit as predicted by the model
 
-(2) I will create a hypothetical dataset (`X_2`) where each DA's `NBA_services_PC` increases by a fixed percentage (10%). I will then identify as a percentage of current transit use rate increases the most, measured by percentage increase.
+## Two scenarios
+I will specify two scenarios in which access to public transit services increases.
 
-## Scenario 1: services per capita increases by a fixed amount
+### Scenario 1
+
+(1) I will create a hypothetical dataset (`X_1`) where each DA's `NBA_services_PC` increases by a fixed amount (10% of average current NBA_services_PC across all DAs in GVA, or about 1.2 percentage points). I will then identify DAs where transit use rate increases the most, measured by percentage point increase.
 
 The following two maps identify DAs with top 10% percentage point increase in transit use if number of transit services per person increases by about 1.2 in the neighborhood area.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_74_0.png" alt="Map: LASSO Scenario 1">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_1_LASSO.png" alt="Map: LASSO Scenario 1">
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_75_0.png" alt="Map: Random Forest Scenario 1">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_1_rf.png" alt="Map: Random Forest Scenario 1">
 
 Are our predictions of increase in transit use similar between the two models? I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.768. This result is satisfactory.
 
-## Scenario 2: services per capita increases by a fixed percent (10%)
+### Scenario 2
+
+(2) I will create a hypothetical dataset (`X_2`) where each DA's `NBA_services_PC` increases by a fixed percentage (10%) of current `NBA_services_PC`. I will then identify as a percentage of current transit use rate increases the most, measured by percentage increase.
 
 The following two maps identify DAs with top 10% percentage point increase in transit use if number of transit services per person increases by 10 percent of the current value, in the neighborhood area.
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_80_0.png" alt="Map: LASSO Scenario 2">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_2_LASSO.png" alt="Map: LASSO Scenario 2">
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/output_81_0.png" alt="Map: Random Forest Scenario 2">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_2_rf.png" alt="Map: Random Forest Scenario 2">
 
 The two models' predictions, under scenario 2, are also quite similar. I have calculated the Pearson correlation coefficient between two sets of predictions, which stands at 0.767.
+
+## Impact evaluation
+
+If the public transportation authority of GVA does indeed increase service in the key areas, how much increase of transit use can we expect? A more fundamental question is that, although increase in access to public transit does have a positive impact on use of transit in commuting, how many DAs in GVA should be prioritized? The following analyses show that the law of dinimishing returns hold here, and the more DAs we target, the less increase in transit use we will see. However, as compared to the baseline scenario where we increase transit services in randomly selected DAs, a policy based on our models still results in far more increase in overall transit use in GVA overall.
+
+###
