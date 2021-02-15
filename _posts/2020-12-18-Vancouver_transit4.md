@@ -271,7 +271,9 @@ I want to point out that here, only the Random Forest model, instead of the LASS
 
 ### Scenario 1
 
-The following chart shows that as compared to the baseline, a policy to increase transit access informed by our model does result in more increase in public transportation use. For example, if we target DAs with a combined population of 100,000 and increase their number of transit services per capita by 1.2, we are expected to see 0.7 percentage point increase in proportion of people using transit, which translates into 700 more people using transit. By contrast, if we randomly select DAs also with a combined population of 100,000, we are only expected to see 100 more people using transit. If we target DAs with a combined population of 400,000 and and increase their number of transit services per capita by 1.2, we are expected to see 0.4 percentage point increase in proportion of people using transit, which translates into 1600 more people using transit. By contrast, if we randomly select DAs also with a combined population of 400,000, we are only expected to see 400 more people using transit.
+The following charts show that as compared to the baseline, a policy to increase transit access informed by our model does result in more increase in public transportation use. For example, if we target DAs with a combined population of 100,000 and increase their number of transit services per capita by 1.2, we are expected to see 0.7 percentage point increase in proportion of people using transit, which translates into 700 more people using transit. By contrast, if we randomly select DAs also with a combined population of 100,000, we are only expected to see 100 more people using transit. If we target DAs with a combined population of 400,000 and and increase their number of transit services per capita by 1.2, we are expected to see 0.4 percentage point increase in proportion of people using transit, which translates into 1600 more people using transit. By contrast, if we randomly select DAs also with a combined population of 400,000, we are only expected to see 400 more people using transit.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_1_benefited_population_compare.png" alt="Chart: Scenario 1 Benefited Population Compare">
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_1_percentage_point_increase_compare.png" alt="Chart: Scenario 1 PC Point Compare">
 
@@ -283,7 +285,9 @@ The following two charts put the impact of the policy specified above into conte
 
 ### Scenario 2
 
-Simulation results for scenario 2 are similar, as shown below. 
+Simulation results for scenario 2 are similar, as shown below.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_2_benefited_population_compare.png" alt="Chart: Scenario 2 Benefited Population Compare">
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit4/plots/X_2_percentage_point_increase_compare.png" alt="Chart: Scenario 2 PC Point Compare">
 
