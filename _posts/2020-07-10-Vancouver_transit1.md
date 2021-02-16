@@ -6,19 +6,24 @@ header:
    image: "/images/Vancouver_photo.jpg"
 excerpt: "GIS, Python, transit"
 ---
-# About the Project
+
+For an interactive web application with simulation results of priority neighborhoods, see [here](https://gva-transit-ml.herokuapp.com/).  
+
+A series of in-depth posts about this project include [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/), [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/), [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/), and [model analyses and recommendations](https://zibowangkangyu.github.io/Vancouver_transit4/).
+
+For the Jupyter Notebook with full analysIs, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/Report.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
+
+## About the Project
 
 Vancouver has one of the best public transit systems in North America. However, to what extent is access to public transit equitable among residents in the metropolitan area? From a plan and management perspective, what are the best locations to develop public transit infrastructure so that more people use public transit to commute? This project will explore accessibility to Vancouver's public transit system across regions, and try to link it to people's modes of commute. 
 
 This will be a series of blog posts and data visualizations. I will firstly explore the public transit data and present how public transit routes and stops are distributed geographically. I will then use the 2016 Census data to break the Greater Vancouver area into dissemination areas, and measure their access to public transit. I will then dig into 2016 Census data, especially records about people's commute, and build machine learning models to identify areas where access to public transportation infrastructure restraints people's transit use. 
 
-The project folder can be found [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit)
-
-# Data
+## Data
 
 There are two main data sources for this project. Detailed information on Vancouver's mass transit system is obtained through [Open Mobility Data](https://transitfeeds.com/) in GTFS form. Canada's [2016 Census](https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/index-eng.cfm) data gives detailed information on the demographic characters of neighborhoods across the Greater Vancouver area. 
 
-## GTFS Data
+### GTFS Data
 
 According to the [official website](https://gtfs.org/gtfs-background) of GTFS, it was originally known as Google Transit Feed Specification, a format of public transit data that is now used by urban transit agencies around the world. I will use GTFS data on Vancouver's mass transit system as of June 6, 2020. 
 
@@ -64,7 +69,7 @@ How busy are the public transit stops? The map below colors the stops by the num
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit1/plots/stops_cnt_trips.png" alt="Map: stops by number of trips per day">
 
-## 2016 Census Data
+### 2016 Census Data
 
 The [Canadian census](https://www12.statcan.gc.ca/census-recensement/index-eng.cfm) conducted in 2016 provides important demographic and socio-economic information about neighborhoods in the Greater Vancouver Area. Greater Vancouver Area (GVA) is one of the 293 Census Divisions (CDs) in Canada, and we confine out analyses there.
 
@@ -74,7 +79,7 @@ The amount of data available from the census is enormous, and for this project, 
 
 Moreover, data at the DA level will also be aggregated to the Census Subdivision (CSD) and Census Consolidated Division (CCD) levels.
 
-### DAs in GVA
+#### DAs in GVA
 
 There are 3450 DAs in GVA. The following map shows the boundaries of about 322 DAs in Burnaby CSD.
 

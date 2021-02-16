@@ -6,7 +6,14 @@ header:
    image: "/images/Vancouver_photo1.jpg"
 excerpt: "GIS, Python, transit"
 ---
-# Access to public transit
+
+For an interactive web application with simulation results of priority neighborhoods, see [here](https://gva-transit-ml.herokuapp.com/).  
+
+A series of in-depth posts about this project include [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/), [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/), [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/), and [model analyses and recommendations](https://zibowangkangyu.github.io/Vancouver_transit4/).
+
+For the Jupyter Notebook with full analysIs, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/Report.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
+
+## Access to public transit
 
 GTFS is a great data source to gauge access to public transit from. This analysis defines access to public transit in the following two ways:
 
@@ -24,7 +31,7 @@ The following map shows DAs with top 10% transit stops per capita. The distribut
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/NBA_stops_PC_10pc.png" alt="Map: Top NBA Stops PC">
 
-# Usage of public transit
+## Usage of public transit
 
 On the other side of the equation is residents' usage of public transit. Fortunately, Canada's 2016 census provides abundant information about residents' usage of public transit to the DA level. In the "Journey to Work" section, the numbers of residents falling into the following categories are provided:
 - commuters (aged 15 or older, living in private housing)
@@ -43,7 +50,7 @@ In average, in the Greater Vancouver Area, 20.4% of residents commute using publ
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/DA_public_prop.png" alt="Map: DA public prop">
 
-# Transit duration and destination
+## Transit duration and destination
 
 The census also tells us about people's transit destinations, and the average commuting time of different DAs. In the Greater Vancouver Area, the average medium commute duration across CSDs is about 30.2 minutes. As shown in the following map, people living in DAs in the west half of the metropolitan area spend relatively less time commuting, whereas people living in areas in the east, including Burnaby, Coquitlam and Surrey spend longer time in commute. 
 
@@ -52,4 +59,3 @@ The census also tells us about people's transit destinations, and the average co
 When it comes to the destination of commuting, an average of 44.1% of residents commute within their CSDs in the Greater Vancouver Area. The City of Vancouver has the highest proportion (67.8%) of residents commuting within the CSD. The map below shows the proportions of people who transit to work within their CSDs, by CSD. We can see that CSDs immediately neighboring the city of Vancouver have the lowest proportions of people working within own CSDs, probably because people there tend to transit to the City to work. 
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Vancouver_transit2/plots/commute_within_csd.png" alt="Map: CSD commute destination">
-
