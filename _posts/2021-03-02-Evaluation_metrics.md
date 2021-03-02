@@ -6,15 +6,13 @@ header:
 excerpt: "machine learning, binary classification"
 ---
 
-# Evaluation Metrics for Binary Classification in Machine Learning: When Accuracy Score Is Not Enough
-
 At work and in our everyday life, we often make decisions that have two potential outcomes (true or false, acceptance or rejection, etc.). A type of machine learning algorithms, namely binary classification, can automate this process. However, we need to always bear in mind what our ultimate goals are and make sure that algorithms are set up to achieve these goals.  
 
 ## Evaluation metrics, accuracy score and its shortcomings
 
 Roughly speaking, evaluation metrics are used to judge how well a machine learning model achieves a pre-specified goal. Consider a scenario where a bank tries to predict whether a person defaults on credit card loans using demographic and professional data. You are provided with two algorithms A and B, and check their predictions against the actual outcomes, You get the following tables:
   
-  - Algorithm 1
+- Algorithm 1
 
 |                         | Predicted: default | Predicted: non-default | Sum |
   |------------------------:|--------------------|------------------------|-----|
@@ -22,7 +20,7 @@ Roughly speaking, evaluation metrics are used to judge how well a machine learni
   | Actual: non-default     | 10                 | 80                     | 90  |
   | Sum                     | 15                 | 85                     | 100 |
   
-  Among the 10 actual default cases, Algorithm 1 predicted that 5 of them would default and 5 of them would not. Among then 90 actual non-default cases, the algorithm predicted that 10 of them would default and 80 of them would not. 
+  Among the 10 actual default cases, Algorithm 1 predicted that 5 of them would default and 5 of them would not. Among then 90 actual non-default cases, the algorithm predicted that 10 of them would default and 80 of them would not.
 
 - Algorithm 2
 

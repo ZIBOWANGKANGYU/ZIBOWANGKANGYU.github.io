@@ -1,5 +1,5 @@
 ---
-title: "Demographic Characters and Access to Public Transit in Greater Vancouver: Analyses and Recommendations"
+title: "Demographic Characteristics and Access to Public Transit in Greater Vancouver: Analyses and Recommendations"
 date: 2020-12-18
 tags: [GIS, python, transit]
 header:
@@ -7,9 +7,14 @@ header:
 excerpt: "GIS, Python, transit"
 ---
 
-For an interactive web application with simulation results of priority neighborhoods, see [here](https://gva-transit-ml.herokuapp.com/).  
+A shorter high-level summary of the project can be found [here](https://zibowangkangyu.github.io/Vancouver_transit_summary/). For an interactive web application with simulation results of priority neighborhoods, see [here](https://gva-transit-ml.herokuapp.com/).  
 
-A series of in-depth posts about this project include [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/), [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/), [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/), and [model analyses and recommendations](https://zibowangkangyu.github.io/Vancouver_transit4/).
+This is part 4 of a series of in-depth posts about this project including
+
+- [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/)
+- [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/)
+- [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/), and
+- [model analyses and recommendations](https://zibowangkangyu.github.io/Vancouver_transit4/).
 
 For the Jupyter Notebook with full analysIs, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/Report.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
 
