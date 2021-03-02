@@ -1,6 +1,6 @@
 ---
 title: "Public Transportation in Vancouver: Suggestions from Machine Learning Models"
-date: 2021-12-1
+date: 2021-2-14
 tags: [GIS, python, transit]
 header:
    image: "/images/Vancouver_photo4.jpg"

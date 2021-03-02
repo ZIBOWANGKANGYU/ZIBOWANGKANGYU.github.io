@@ -25,7 +25,7 @@ We confine the time span of this study from March 2020 to January 2021.
 
 We use people's physical movement at non-residential venues as a measurement of compliance to pandemic containment policies in the population. Google has made public datasets on movement of people available since February 15, 2020 to help combat COVID-19. As shown in the map below, states in Southern US, along with New York and small states in the northeast saw the most dramatic drop in non-residential mobility, By contrast, states in the northwest saw little change, or even increase in non-residential mobility. 
 
-<img src="{{ site.url }}{{ site.baseurl }}/images/infodemic/plots/Mobility_change.png" alt="Map: Mobility change">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Mobility_change.png" alt="Map: Mobility change">
 
 It turns out that in addition to differences in strictness of government policies and levels of compliance, Google Mobility data should also be used along with temperature and urbanization rate to get a more accurate picture. The baseline data was taken in January/February 2020, and residents of northern and colder states are naturally more stagnant during the winter months, and are thus more likely to be more mobile in the summer period. In addition, rural and urban residents also show different movement patterns.
 
