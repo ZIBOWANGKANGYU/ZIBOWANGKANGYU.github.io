@@ -9,7 +9,12 @@ excerpt: "GIS, Python, transit"
 
 A shorter high-level summary of the project can be found [here](https://zibowangkangyu.github.io/Vancouver_transit_summary/). For an interactive web application with simulation results of priority neighborhoods, see [here](https://gva-transit-ml.herokuapp.com/).  
 
-A series of in-depth posts about this project include [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/), [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/), [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/), and [model analyses and recommendations](https://zibowangkangyu.github.io/Vancouver_transit4/).
+This is part 1 of a series of in-depth posts about this project including
+
+- [data sources](https://zibowangkangyu.github.io/Vancouver_transit1/)
+- [key variables](https://zibowangkangyu.github.io/Vancouver_transit2/)
+- [machine learning modeling](https://zibowangkangyu.github.io/Vancouver_transit3/), and
+- [model analyses and recommendations](https://zibowangkangyu.github.io/Vancouver_transit4/).
 
 For the Jupyter Notebook with full analysIs, please see [here](https://nbviewer.jupyter.org/github/ZIBOWANGKANGYU/Vancouver_transit/blob/master/Report.ipynb). The GitHub repo of this analysis is located [here](https://github.com/ZIBOWANGKANGYU/Vancouver_transit).  
 
@@ -17,7 +22,7 @@ For the Jupyter Notebook with full analysIs, please see [here](https://nbviewer.
 
 Vancouver has one of the best public transit systems in North America. However, to what extent is access to public transit equitable among residents in the metropolitan area? From a plan and management perspective, what are the best locations to develop public transit infrastructure so that more people use public transit to commute? This project will explore accessibility to Vancouver's public transit system across regions, and try to link it to people's modes of commute. 
 
-This will be a series of blog posts and data visualizations. I will firstly explore the public transit data and present how public transit routes and stops are distributed geographically. I will then use the 2016 Census data to break the Greater Vancouver area into dissemination areas, and measure their access to public transit. I will then dig into 2016 Census data, especially records about people's commute, and build machine learning models to identify areas where access to public transportation infrastructure restraints people's transit use. 
+This will be a series of blog posts and data visualizations. I will firstly explore the public transit data and present how public transit routes and stops are distributed geographically. I will then use the 2016 Census data to break the Greater Vancouver area into dissemination areas, and measure their access to public transit. I will then dig into 2016 Census data, especially records about people's commute, and build machine learning models to identify areas where access to public transportation infrastructure restraints people's transit use.
 
 ## Data
 
