@@ -19,14 +19,70 @@ Based on our models, we identified US states where, by geographic and demographi
 
 ## Data source, preprocessing and EDA
 
-We confine the time span of this study from March 2020 to January 2021. 
+We confine the time span of this study from March 2020 to January 2021.
 
 ### Physical mobility
 
-We use people's physical movement at non-residential venues as a measurement of compliance to pandemic containment policies in the population. Google has made public datasets on movement of people available since February 15, 2020 to help combat COVID-19. As shown in the map below, states in Southern US, along with New York and small states in the northeast saw the most dramatic drop in non-residential mobility, By contrast, states in the northwest saw little change, or even increase in non-residential mobility. 
+We use people's physical movement at non-residential venues as a measurement of compliance to pandemic containment policies in the population. Google has made public datasets on movement of people available since February 15, 2020 to help combat COVID-19. As shown in the map below, states in Southern US, along with New York and small states in the northeast saw the most dramatic drop in non-residential mobility, By contrast, states in the northwest saw little change, or even increase in non-residential mobility.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Mobility_change.png" alt="Map: Mobility change">
 
-It turns out that in addition to differences in strictness of government policies and levels of compliance, Google Mobility data should also be used along with temperature and urbanization rate to get a more accurate picture. The baseline data was taken in January/February 2020, and residents of northern and colder states are naturally more stagnant during the winter months, and are thus more likely to be more mobile in the summer period. In addition, rural and urban residents also show different movement patterns.
+It turns out that in addition to differences in strictness of government policies and levels of compliance, Google Mobility data should also be used along with temperature and urbanization rate to get a more accurate picture. The baseline data was taken in January/February 2020, and residents of northern and colder states are naturally more stagnant during the winter months, and are thus more likely to be more mobile in the summer period. In addition, rural and urban residents also show different movement patterns. Therefore, as part of regression analyses, we have included a state's average temperature and urbanization rate whenever the physical movement data is used.
 
 ### Misconception and exposure to misinformation
+
+Using survey data from [CovidStates](https://covidstates.org/), we constructed indicators, we constructed the following two indicators:
+
+- Misconceptions about COVID-19. It is measured as the average proportion of false statements about the prevention and treatment of COVID-19 identified as correct by respondents. It appears that the southern states show much higher rates of misconceptions than the rest of the country.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misconception_map.png" alt="Map: Misconceptions">
+
+- Exposure to misinformation from social and traditional media. We took the average prevalence of false information by media source, weighted by the amount of usage of each media source for COVID-19 related information. Overall, we can see quite clearly that there are general trends between misinformation and misconceptions. Both southern states, and states with major metropolitan centers including California and New York, are more exposed to COVID-19 misinformation.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misinformation_map.png" alt="Map: Misinformation">
+
+As shown in the bar-chart below, social media platforms, especially Instagram and YouTube, have higher high proportion of COVID-related information that is false. More urbanized areas such as Washington DC, California and New York
+have significantly higher proportion of residents who get information about COVID-19 from such sources, and are thus exposed to misinformation. By contrast, more rural states, like Wyoming and Vermont, are less exposed to Instagram and YouTube (levels of Facebook and traditional news usage are similar), and are thus less exposed to misinformation from the media.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misinformation_chart.png" alt="Chart: Misinformation">
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misinformation_chart_2.png" alt="Chart: Misinformation 2">
+
+### COVID epidemiologies
+
+[The Covid Tracking Project](https://covidtracking.com/), which has fortunately ended in March 2021, provides fantastic daily COVID pidemiological data at the U.S. state level. Key statistics that we used include: 
+
+- New Deaths for each day
+
+- New Hospitalizations for each day
+
+- Current number of patients in ICU for each day
+
+- Current number of patients on ventilator
+
+- Test positivity rate for each day
+
+### Government pandemic control measures
+
+we collected data about government restrictions to control the spread of COVID-19 at the state level, from the [Covid-19 Policy Responses project](https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker) run by Blavatnik School of Government, Oxford University. The dataset tracks closure of venues, cancellation of events, restrictions on gathering, stay-at-home orders, and
+restrictions on domestic and international movement.
+
+### Demographics
+
+We compiled demographic data at the state level, covering characterstics including education, temperature, urbanization, age, race and economics, from a variety of sources. We want to find out what demographic features are associated to misconceptions about COVID-19 and exposure to COVID-19 misinformation.
+
+## Modelling
+
+We are aware that there are many factors contributing to the COVID outcomes and simply linking the misinformation to the COVID through regression at high level may involve too much Omitted Variable Bias (OVB) and undermine causal relationship we want to investigate. Therefore, we would like to stay focused on proving one logical chain that we believe to be both important and interesting with statistical measures. In order to do so, we separated the whole process into steps: first we analyze COVID-Mobility relationship and then we investigate Mobility-Misinformation relationship. To be rigorous, we also investigated COVID-Misinformation relationship and included in the  mobility-Misinformation section.
+
+### Impact of moblity on COVID spread
+
+We applied panel regression to analyzing the relationship between mobility and the spread of COVID at the state level. To avoid the inverse causal relationship between mobility and COVID, we used 90 days leading techniques on dependent variables (COVID metrics). We are also aware of the multi-collinearity problem in our mobility features, and we therefore applied Principle Component Analysis (PCA) to summarize all the mobility features (capturing 87%
+vairance), and run the regression again, in addition to regressions on individual mobility features.
+
+The models again shows statistical significance in the coefficient and proved the relationship between Mobility Index and the COVID statistics. More physical activities in non-essential lead to more infections of COVID-19.
+
+### Misconceptions, misinformation and disease outcomes
+
+Due to a lack of panel data on misconceptions, misinformation and disease outcomes, We used cross-sectional regression to explore the relationship between misconceptions, misinformation and disease outcomes. As shown in the following table, the positive relationship between COVID-19 misconceptions and severity of disease outcomes hold. Also interesting is the fact that although misconceptions are related to worse disease outcomes, exposure to misinformation from media sources does not have a significant impact on disease outcomes.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misinformation_regression.png" alt="Chart: Misinformation regression">
