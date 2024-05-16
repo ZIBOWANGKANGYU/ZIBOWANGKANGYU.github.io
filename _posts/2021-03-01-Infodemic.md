@@ -86,3 +86,33 @@ The models again shows statistical significance in the coefficient and proved th
 Due to a lack of panel data on misconceptions, misinformation and disease outcomes, We used cross-sectional regression to explore the relationship between misconceptions, misinformation and disease outcomes. As shown in the following table, the positive relationship between COVID-19 misconceptions and severity of disease outcomes hold. Also interesting is the fact that although misconceptions are related to worse disease outcomes, exposure to misinformation from media sources does not have a significant impact on disease outcomes.
 
 <img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misinformation_regression.png" alt="Chart: Misinformation regression">
+
+Through what mechanism does misconceptions and exposure to misinformation impact COVID-19 disease outcomes? We have found evidence to suggest that people who have more misconceptions about COVID-19 are less mindful about reducing physical movement. As shown in the following table, without controlling for level of strictness at each state, misconceptions are associated with more movement in non-residential areas. After controlling for strictness of government measures, the positive relationship between COVID-19 misconceptions and non-residential mobility remains, but the magnificence of impact decreases.
+
+Also worth noting is the fact that higher exposure to media misinformation is shown to be associated with less mobility in non-residential areas. A possible explanation is that although certain media sources, especially social media platforms do contain large amount of misinformation, such information does not necessarily make people less likely to physically distance, or be careful in protecting themselves from COVID-19.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Misinformation_regression_2.png" alt="Chart: Misinformation regression 2">
+
+### Identify vulnerable demographics
+
+#### Misconceptions about COVID and exposure to misinformation
+
+we found that both median age and urbanization percentage both showed statistically significant (below p=0.05) negative coefficients, while percentage of population with less than a high school diploma showed a statistically significant positive coefficient. This means that old, rural regions, with significant high school dropout rates are significantly more at risk for misconceptions than the rest of the country.
+
+Conversely, for misinformation, we found a rather interesting different result. We found that percentage of population with less than a high school diploma, as well as percentage of population with greater than a bachelors degree, showed statistically significant positive coefficients, whereas those with only a high school diploma showed no strong directional coefficient. This means that misinformation is disproportionately affecting the lowest education levels, as well as the highest, but not those in the middle. We found this quite surprising.
+
+Overall, this supports our original hypothesis that misinformation and misconceptions are two different issues plaguing the United States. The visualization below shows the change in coefficients from each regression, and the results of both of these models are provided in the appendix.
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Coefficients.png" alt="Chart: Coefficients on misconceptions and misinformation">
+
+#### Mobility
+
+Similarly, here we are tring to potentially identify any links between demographic characterstics and extent of mobility drop during the pandemic. In this instance, we see that the most at risk group when it comes to mobility are those that are young, living in non-urban areas, with moderate education levels. Coefficients and p-values are included below:
+
+<img src="{{ site.url }}{{ site.baseurl }}/images/Infodemic/plots/Coefficients_1.png" alt="Chart: Mobility regression">
+
+## Conclusions
+
+This analysis highlights that between exposure to misinformation and possession of misconceptions about COVID-19, the latter is observably more strongly linked to potential lack of compliance to public health measures and therefore more severe pandemic effects. We have also identified demographics that are older, more rural, less educated (no high school diploma) and more economically disadvantaged are more likely to possess misconceptions about COVID-19, and in turn demonstrate more mobility in non-essential areas, less compliance to public health measures, and suffer more severe effects from the pandemic.
+
+We suggest that federal and state governments and other agencies could effectively use their resources to craft more impactful measures and regulations, such as focusing on education for demographics vulnerable to misconception, while simultaneously combating digital misinformation in areas that sees more prevalence and spread. This targeted, two-pronged approach could address those most vulnerable to the pandemic, as well as prevent the formation of more misconception-vulnerable groups, ultimately alleviating the effects of not just COVID-19, but also future pandemics.
