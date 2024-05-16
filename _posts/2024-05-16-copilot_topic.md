@@ -10,9 +10,52 @@ Generative Artificial Intelligence (genAI) has become an indispensable part of s
 I use tools like GitHub Copilot every day to improve my productivity and automate routine tasks. Recently, I have witnessed cases where Copilot seems to stop working, and after investigation, the reason, I believe, is 
 the underlying genAI's safety measures that restrict certain kinds of outputs. 
 
-It requires the utmost care to use the most power tools responsibly, and . 
+It requires the utmost care to use the most power tools responsibly, and developers and analysts who use genAI tools should be aware of such safety measures and understand its implications. More importantly, on the top of safety measures included in the genAI, we should stay vigilant and take time to reflect: will my use of genAI create danger, harm or bias? 
 
-## Evaluation metrics, accuracy score and its shortcomings
+## Why has my Copilot stopped working?
+
+As an example, I create a few helper functions to analyze demographic data of some Canadian cities in R. GitHub Copilot is extremely powerful in such tasks: 
+
+```{R}
+library(tibble)
+
+demo_data <- tibble(
+
+  city = c("Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa"),
+
+  population = c(2731571, 1704694, 631486, 1237656, 934243),
+
+  median_age = c(37.1, 39.3, 40.8, 36.6, 39.4),
+
+  median_income = c(34500, 32000, 30000, 35000, 33000),
+
+  immigrant_percent = c(46.1, 31.4, 40.8, 30.2, 23.6),
+
+  university_percent = c(30.3, 25.4, 35.6, 28.7, 27.8),
+
+  transgender_percent = c(0.5, 0.3, 0.4, 0.2, 0.1),
+
+  data_scientist_percent = c(0.1, 0.2, 0.3, 0.4, 0.5)
+
+)
+```
+
+I want to create functions that extract one aspect of information, for example, percentage of university-educated individuals, for selected cities. For example, I want to create a `get_population` function that does the following:
+
+```{R}
+
+get_population("Toronto")
+
+# A tibble: 1 × 2
+  city    population
+  <chr>        <dbl>
+1 Toronto    2731571
+
+```
+
+With very limited prompt, CoPilot is going a great job creating population, age and income:
+
+
 
 Roughly speaking, evaluation metrics are used to judge how well a machine learning model achieves a pre-specified goal. Consider a scenario where a bank tries to predict whether a person defaults on credit card loans using demographic and professional data. You are provided with two algorithms A and B, and check their predictions against the actual outcomes, You get the following tables:
   
