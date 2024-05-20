@@ -99,7 +99,7 @@ It turns out this is not the case. Copilot had zero problem creating `get_data_s
 
 GitHub Copilot's model provider, OpenAI, has made [statements](https://openai.com/index/moving-ai-governance-forward/) about improving the safety, security and trustworthiness of AI. Although I cannot be 100% sure what is behind Copilot's hesitation, it definitely makes sense to have safety measures on certain topics to avoid societal harm. This is especially important when heated words on the internet are dividing our societies or even inciting violence. 
 
-In the example above, the behaviour of Copilot is easily identifiable and understandable. However, as more tasks, and especially higher-level tasks are delegated to genAI in software development, safety and fairness measures at less obvious places. This requires developers, as AI users, to have a strong understanding of how AI safety measures work. As we use Copilot to write codes, don't forget to ask the following questions:
+In the example above, the behaviour of Copilot is easily identifiable and understandable. However, as more tasks, and especially higher-level tasks are delegated to genAI in software development, safety and fairness measures also work in less obvious ways. This requires developers, as AI users, to have a strong understanding of how AI safety measures work. As we use Copilot to write codes, don't forget to ask the following questions:
 
 - Does part of my development / analytical project have risks in terms of safety, security, societal harm and fairness?
 
@@ -109,7 +109,7 @@ In the example above, the behaviour of Copilot is easily identifiable and unders
 
 ## Beyond safety
 
-Safety, security and fairness in AI systems are important and complex topics, which, we as users of genAI, should nonetheless keep in mind. In the example above, Copilot's hesitation mitigates risks due to genAI having a harmful output, but it also creates risks due to genAI not having a good output. 
+Safety, security and fairness in AI systems are important and complex topics, which, we as users of genAI, should nonetheless keep in mind. In the example above, Copilot's hesitation mitigates risks due to genAI having a harmful output, but it also creates risks due to **genAI not having a good output**. 
 
 - Will valuable information about disadvantaged groups of people, for example immigrants or transgender individuals, be kept unattended due to AI safety measures? 
 
