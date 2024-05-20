@@ -14,7 +14,7 @@ It requires the utmost care to use the most power tools responsibly, and develop
 
 ## Why has my Copilot stopped working?
 
-As an example, I create a few helper functions to analyze demographic data of some Canadian cities in R. GitHub Copilot is extremely powerful in such tasks: 
+As an example, I create a few helper functions to analyze demographic data of some Canadian cities in R. GitHub Copilot is extremely powerful for such tasks: 
 
 ```{R}
 library(tibble)
@@ -55,7 +55,7 @@ get_population("Toronto")
 
 With very limited prompt, CoPilot is going a great job creating population, age and income:
 
-
+[![copilot successful code generation](https://www.youtube.com/watch?v=4Y2ti_G-73E)](https://www.youtube.com/watch?v=4Y2ti_G-73E)
 
 Roughly speaking, evaluation metrics are used to judge how well a machine learning model achieves a pre-specified goal. Consider a scenario where a bank tries to predict whether a person defaults on credit card loans using demographic and professional data. You are provided with two algorithms A and B, and check their predictions against the actual outcomes, You get the following tables:
   
