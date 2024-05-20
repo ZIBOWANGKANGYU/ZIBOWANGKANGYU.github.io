@@ -16,7 +16,6 @@ It requires the utmost care to use the most power tools responsibly, and develop
 
 As an example, I create a few helper functions to analyze demographic data of some Canadian cities in R. GitHub Copilot is extremely powerful for such tasks: 
 
-<span style="font-size:0.5em;">
 ```{R}
 library(tibble)
 
@@ -40,7 +39,6 @@ demo_data <- tibble(
 
 )
 ```
-</span>
 
 I want to create functions that extract one aspect of information, for example, percentage of university-educated individuals, for selected cities. For example, I want to create a `get_population` function that does the following:
 
