@@ -75,7 +75,29 @@ Specifically, Copilot is "stuck" at three places. One is after "should return th
 
 **What is going on here?** Has Copilot suddenly become less smart? Let us continue with creating the rest of functions. 
 
-**Woohoo!** Copilot is smart again! As you can see, 
+**Woohoo!** Copilot is smart again! As you can see, Copilot had no problem creating the fifth function, `get_university_percent`, correctly.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xpWXbAeKSYw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+What about the percentage of transgender individuals? **Again, Copilot seems stuck**. GitHub seems reluctant to proceed at three places: 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/t4-MH_2Mbk0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+- At function description, after "should return the percentage of". We need the phrase "transgender individuals". 
+
+- Name of the function, which should be "get_transgender_percent"
+
+- In the `select` function, which should be `(city, transgender_percent)`
+
+We are beginning to see that **keywords** ("immigrant" and "transgender") are playing an important role here. An alternative hypothesis is that while population, age, income and education are commonly analyzed demographic characteristics, immigration status and gender identity are less commonly studied. If this is indeed the case, Copilot should also have difficulty creating a function analyzing the percentage of data scientists. Whether somebody works in data science is not a question asked in Canadian censuses, but immigration status is. 
+
+It turns out this is not the case. Copilot had zero problem creating `get_data_scientist_percent`. 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3RMUFhcG998" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Safety and fairness in genAI models: how does it impact my development work?
+
+GitHub Copilot's model provider, OpenAI, has made [statements](https://openai.com/index/moving-ai-governance-forward/) about improving the safety, security and trustworthiness of AI. Although I cannot be 100% sure
 
 Roughly speaking, evaluation metrics are used to judge how well a machine learning model achieves a pre-specified goal. Consider a scenario where a bank tries to predict whether a person defaults on credit card loans using demographic and professional data. You are provided with two algorithms A and B, and check their predictions against the actual outcomes, You get the following tables:
   
