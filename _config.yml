@@ -108,14 +108,14 @@ analytics:
 author:
   name             : "Mark Wang"
   avatar           : "/images/Mark_profile.png"
-  bio              : "Master of Data Science student at University of British Columbia with data analytics experience in finance, econometrics and consulting. I am proficient in machine learning, time series and geospatial modeling, natural language processing, and applied economics research."
-  location         : "Washington, DC"
-  email            : "changguang@outlook.com"
+  bio              : "R developer with data science experience in finance, econometrics and consulting. I am proficient in machine learning, time series and geospatial modeling, natural language processing, and applied economics research."
+  location         : "Toronto, ON"
+  email            : "kangyumarkwang@gmail.com"
   linkedin         : "kmarkwang"
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      # url: mailto:changguang@outlook.com
+      # url: mailto:kangyumarkwang@gmail.com
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
