@@ -53,9 +53,29 @@ get_population("Toronto")
 
 ```
 
-With very limited prompt, CoPilot is going a great job creating population, age and income:
+With very limited prompt, CoPilot is doing a great job creating functions for population, age and income:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4Y2ti_G-73E" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+The three functions created are all correct: 
+
+`get_population`
+
+`get_median_age`
+
+`get_median_income`
+
+Copilot is really smart, right? In my experience, this is the least Copilot can do for you in programming. 
+
+Now we move on to the percentage of immigrants. As you can see below, Copilot suddenly seems reluctant to suggest anything:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8xW1G19aX_o" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Specifically, Copilot is "stuck" at three places. One is after "should return the percentage of", following which should be the word "immigrants". Instead, I had to type it out myself. Two is after the first part of the function name "get_", following which should be "immigrant_percent". Again, I had to type it out myself. Three is after the `select` function, which should be `(city, immigrant_percent)`. 
+
+**What is going on here?** Has Copilot suddenly become less smart? Let us continue with creating the rest of functions. 
+
+**Woohoo!** Copilot is smart again! As you can see, 
 
 Roughly speaking, evaluation metrics are used to judge how well a machine learning model achieves a pre-specified goal. Consider a scenario where a bank tries to predict whether a person defaults on credit card loans using demographic and professional data. You are provided with two algorithms A and B, and check their predictions against the actual outcomes, You get the following tables:
   
