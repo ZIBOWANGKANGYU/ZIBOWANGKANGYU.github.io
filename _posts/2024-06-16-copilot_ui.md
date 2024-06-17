@@ -111,3 +111,35 @@ Add the following to tell Copilot to do exactly this:
 
 Copilot does not always give the best code recommendation, especially when the "correct" output is as long as 124 lines. Luckily, the first iteration already renders pretty good results: 
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uCqk9iiI5PY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+However, the "location" and LinkedIn logos, under author introduction, are not showing properly and I am not sure why. This is when I need to iterate my solution. I told Copilot what went wrong, and asked for solutions:
+
+```{r}
+
+# The above UI code works well. However, the "LinkedIn" icon is not showing. The "fab fa-fw fa-linkedin" class seems to have a problem. How to fix it? 
+
+# The "fab fa-fw fa-linkedin" class is from the Font Awesome library. The Font Awesome library is not included in the Shiny app.
+
+# To include the Font Awesome library in the Shiny app, I need to add the Font Awesome library to the UI.
+
+# Please provide example code:
+
+# Add Font Awesome library to the UI
+
+ui <- tagList(
+  tags$head(
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  ),
+  ui
+)
+
+# The Font Awesome library is now included in the Shiny app. The "LinkedIn" icon should now show up correctly.
+
+```
+
+The small problem is also solved in no time. The same principle works with Copilot: don't assume and always ask. 
+
+Here is the complete version of this Shiny app that does not look like a Shiny app:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uOJaaXEmpj0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
