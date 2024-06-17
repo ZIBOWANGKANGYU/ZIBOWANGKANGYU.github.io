@@ -138,8 +138,10 @@ ui <- tagList(
 
 ```
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uOJaaXEmpj0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 The small problem is also solved in no time. The same principle works with Copilot: don't assume and always ask. 
 
 Here is the complete version of this Shiny app that does not look like a Shiny app:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/uOJaaXEmpj0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lGR6JfKFyQ0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
